@@ -28,6 +28,30 @@ body {
     font-size: 32pt;
 }
 
+.grid-container {
+    margin: auto;
+    display: inline-grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+    background-color: #2196F3;
+    /* background-color: #f32121; */
+    padding: 10px;
+}
+
+.grid-item {
+    width: 100px;
+}
+
+.game-cell {
+    height: 100px;
+}
+
+.circle-cell {
+    border-radius: 50%;
+    height: 95%;
+    width: 95%;
+    background-color: #222;
+}
+
 @media only screen and (max-width: 979px) {
     
 }
