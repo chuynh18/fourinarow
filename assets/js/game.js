@@ -39,20 +39,23 @@ const turnObj = {
     turn: 0,
     inverseTurn: 0,
     turns: 0,
+    winner: 0,
     startGame: function() {
         this.turn = 1;
         this.inverseTurn = 2;
     },
     play: function() {
-        if (this.turn === 1) {
-            this.turn++;
-            this.inverseTurn--;
-        } else if (this.turn === 2) {
-            this.turn--;
-            this.inverseTurn++;
+        if (!this.winner) {
+            if (this.turn === 1) {
+                this.turn++;
+                this.inverseTurn--;
+            } else if (this.turn === 2) {
+                this.turn--;
+                this.inverseTurn++;
+            }
+    
+            this.turns++;
         }
-
-        this.turns++;
     },
     reset: function() {
         this.turn = 0;
@@ -61,8 +64,21 @@ const turnObj = {
     }
 }
 
-const playColumn = function(columnId, turn) {
+const reset = function() {
+    gameBoard.reset();
+    turnObj.reset();
+}
 
+const renderGame = function() {
+    for (let i = 0; i < gameBoard.board.length; i++) {
+        for (let j = 0; j < gameBoard.board[i].length; j++) {
+            if (gameBoard.board[i][j] === 1) {
+                document.getElementById(`${i}-${j}`).classList.add("p1");
+            } else if (gameBoard.board[i][j] === 2) {
+                document.getElementById(`${i}-${j}`).classList.add("p2");
+            }
+        }
+    }
 }
 
 // ========== attach event handlers ==========
@@ -71,12 +87,22 @@ const gameColumns = document.getElementsByClassName("game-column");
 
 for (let i = 0; i < gameColumns.length; i++) {
     gameColumns[i].addEventListener("click", function(event) {
-        if (event.target.classList.contains("circle-cell")) {
-            console.log(event.target.parentElement.parentElement.id);
-        } else if (event.target.classList.contains("game-cell")) {
-            console.log(event.target.parentElement.id);
-        } else if (event.target.classList.contains("game-column")) {
-            console.log(event.target.id);
+        if (turnObj.turn !== 0) {
+            if (event.target.classList.contains("circle-cell")) {
+                console.log(event.target.parentElement.parentElement.id);
+                gameBoard.play(event.target.parentElement.parentElement.id);
+                renderGame();
+            } else if (event.target.classList.contains("game-cell")) {
+                console.log(event.target.parentElement.id);
+                gameBoard.play(event.target.parentElement.id);
+                renderGame();
+            } else if (event.target.classList.contains("game-column")) {
+                console.log(event.target.id);
+                gameBoard.play(event.target.id);
+                renderGame();
+            }
+        } else {
+            console.log("error:  developer C is a nooblord and forgot to start the game");
         }
     });
 }

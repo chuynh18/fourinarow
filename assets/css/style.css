@@ -52,6 +52,14 @@ body {
     background-color: #222;
 }
 
+.p1 {
+    background-color: #75a6d6;
+}
+
+.p2 {
+    background-color: #e07676;
+}
+
 @media only screen and (max-width: 979px) {
     
 }
