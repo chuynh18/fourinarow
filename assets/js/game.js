@@ -334,6 +334,12 @@ const renderGame = function() {
             }
         }
     }
+
+    if (turnObj.mode === 4) {
+        modifyEventListener();
+    } else if (turnObj.mode === 0) {
+        modifyEventListener(true);
+    }
     
     if (turnObj.turn === 1) {
         html.style.backgroundColor = "#778899";
@@ -348,6 +354,9 @@ const renderGame = function() {
                 undoButton.disabled = true;
             } else if (turnObj.mode === 3) {
                 undoButton.disabled = true;
+                modifyEventListener();
+            } else if (turnObj.mode === 2) {
+                modifyEventListener(true);
             }
         }
     } else if (turnObj.turn === 2) {
@@ -363,8 +372,12 @@ const renderGame = function() {
                 undoButton.disabled = true;
             } else if (turnObj.mode === 2) {
                 undoButton.disabled = true;
-            } else if (turnObj.mode === 3 && turnObj.turns === 1) {
-                undoButton.disabled = true;
+                modifyEventListener();
+            } else if (turnObj.mode === 3) {
+                modifyEventListener(true);
+                if (turnObj.turns === 1) {
+                    undoButton.disabled = true;
+                }
             }
         }
     }
@@ -430,41 +443,54 @@ const showDevPanel = (function() {
     };
 })()
 
+// this function is attached by the event listener stuff below
+const boardClick = function(event) {
+    if (turnObj.turn && !turnObj.winner) {
+        if (event.target.classList.contains("circle-cell")) {
+            if (featureToggle.logging.logClicks) {
+                console.log(event.target.parentElement.parentElement.id);
+            }
+            gameBoard.play(event.target.parentElement.parentElement.id);
+            renderGame();
+        } else if (event.target.classList.contains("game-cell")) {
+            if (featureToggle.logging.logClicks) {
+                console.log(event.target.parentElement.id);
+            }
+            gameBoard.play(event.target.parentElement.id);
+            renderGame();
+        } else if (event.target.classList.contains("game-column")) {
+            if (featureToggle.logging.logClicks) {
+                console.log(event.target.id);
+            }
+            gameBoard.play(event.target.id);
+            renderGame();
+        }
+    } else if (turnObj.winner === 1 || turnObj.winner === 2) {
+        console.log(`Player ${turnObj.winner} won already.`);
+    } else if (turnObj.winner === -1) {
+        console.log("The game ended in a draw.");
+    } else {
+        console.log("error:  developer C is a nooblord and forgot to start the game");
+    }
+}
+
 // ========== attach event handlers ==========
 
-const gameColumns = document.getElementsByClassName("game-column");
+const modifyEventListener = function(add) {
+    const gameColumns = document.getElementsByClassName("game-column");
 
-for (let i = 0; i < gameColumns.length; i++) {
-    gameColumns[i].addEventListener("click", function(event) {
-        if (turnObj.turn && !turnObj.winner) {
-            if (event.target.classList.contains("circle-cell")) {
-                if (featureToggle.logging.logClicks) {
-                    console.log(event.target.parentElement.parentElement.id);
-                }
-                gameBoard.play(event.target.parentElement.parentElement.id);
-                renderGame();
-            } else if (event.target.classList.contains("game-cell")) {
-                if (featureToggle.logging.logClicks) {
-                    console.log(event.target.parentElement.id);
-                }
-                gameBoard.play(event.target.parentElement.id);
-                renderGame();
-            } else if (event.target.classList.contains("game-column")) {
-                if (featureToggle.logging.logClicks) {
-                    console.log(event.target.id);
-                }
-                gameBoard.play(event.target.id);
-                renderGame();
-            }
-        } else if (turnObj.winner === 1 || turnObj.winner === 2) {
-            console.log(`Player ${turnObj.winner} won already.`);
-        } else if (turnObj.winner === -1) {
-            console.log("The game ended in a draw.");
-        } else {
-            console.log("error:  developer C is a nooblord and forgot to start the game");
+    if (add) {
+        for (let i = 0; i < gameColumns.length; i++) {
+            gameColumns[i].addEventListener("click", boardClick);
         }
-    });
+    } else {
+        for (let i = 0; i < gameColumns.length; i++) {
+            gameColumns[i].removeEventListener("click", boardClick);
+        }
+    }
 }
+
+modifyEventListener(true);
 
 document.getElementsByClassName("heading")[0].addEventListener("click", function() {
     showDevPanel();
