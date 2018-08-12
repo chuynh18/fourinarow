@@ -21,21 +21,30 @@ const gameBoard = {
         }
     },
     play: function(column) {
-        if (turnObj.turn !== 0) {
-            if (this.board[column].indexOf(0) !== -1) {
-                this.board[column][this.board[column].indexOf(0)] = turnObj.turn;
-                turnObj.play();
-                this.check();
-                turnObj.move(column);
+        if (!turnObj.winner) {
+            if (turnObj.turn !== 0) {
+                if (this.board[column].indexOf(0) !== -1) {
+                    this.board[column][this.board[column].indexOf(0)] = turnObj.turn;
+                    turnObj.play();
+                    this.check();
+                    turnObj.move(column);
+                } else {
+                    console.log("error:  column is full");
+                }
             } else {
-                console.log("error:  column is full");
+                console.log("error:  developer C is a nooblord and forgot to start the game");
             }
-            
+
+            if (turnObj.mode === 4) {
+                setTimeout(function() {
+                    play();
+                }, 500);
+            }
         } else {
-            console.log("error:  developer C is a nooblord and forgot to start the game");
+            console.log("error:  someone already won");
         }
     },
-    undo: function() {
+    undo: function(rerender) {
         const lastPlay = turnObj.moveList[turnObj.moveList.length - 1];
 
         if (lastPlay) {
@@ -45,7 +54,7 @@ const gameBoard = {
                 gameBoard.board[lastPlay][gameBoard.board[lastPlay].indexOf(0) - 1] = 0;
             }
     
-            turnObj.undo();
+            turnObj.undo(rerender);
         } else {
             console.log("error:  no turns to undo")
         }
@@ -212,6 +221,7 @@ const turnObj = {
     turns: 0,
     winner: 0,
     moveList: [],
+    mode: 0,
     startGame: function() {
         this.turn = 1;
         this.inverseTurn = 2;
@@ -241,11 +251,12 @@ const turnObj = {
         this.turns = 0;
         this.winner = 0;
         this.moveList = [];
+        this.mode = 0;
     },
     move: function(play) {
         this.moveList[this.moveList.length] = play;
     },
-    undo: function() {
+    undo: function(rerender) {
         if (!this.winner) {
             if (this.turn === 1) {
                 this.turn++;
@@ -272,7 +283,10 @@ const turnObj = {
 
         this.moveList.length -= 1;
 
-        renderGame();
+        if (rerender) {
+            renderGame();
+        }
+        
     }
 }
 
@@ -290,7 +304,7 @@ const renderGame = function() {
 
     var undoButton = document.createElement("button");
     undoButton.textContent = "Undo last move";
-    undoButton.setAttribute("onclick", "gameBoard.undo()");
+    undoButton.setAttribute("onclick", "gameBoard.undo(true)");
 
     if (turnObj.turn) {
         for (let i = 0; i < gameBoard.board.length; i++) {
@@ -318,7 +332,7 @@ const renderGame = function() {
             turnArea.appendChild(document.createElement("br"));
             turnArea.appendChild(undoButton);
 
-            if (turnObj.turns === 0) {
+            if (turnObj.turns === 0 || turnObj.mode === 4) {
                 undoButton.disabled = true;
             }
         }
@@ -331,7 +345,7 @@ const renderGame = function() {
             turnArea.appendChild(document.createElement("br"));
             turnArea.appendChild(undoButton);
 
-            if (turnObj.turns === 0) {
+            if (turnObj.turns === 0 || turnObj.mode === 4) {
                 undoButton.disabled = true;
             }
         }
@@ -371,15 +385,18 @@ const renderGame = function() {
         const button4 = document.createElement("button");
 
         button1.textContent = "Human vs Human";
-        button1.setAttribute("onclick", "turnObj.startGame()");
+        button1.setAttribute("onclick", "turnObj.mode=1;turnObj.startGame();");
         button2.textContent = "Human vs CPU";
-        button2.setAttribute("onclick", "");
+        button2.setAttribute("onclick", "turnObj.mode=2;turnObj.startGame();");
         button3.textContent = "CPU vs Human";
-        button3.setAttribute("onclick", "");
+        button3.setAttribute("onclick", "turnObj.mode=3;turnObj.startGame();");
         button4.textContent = "Spectate CPU vs CPU";
-        button4.setAttribute("onclick", "");
+        button4.setAttribute("onclick", "turnObj.mode=4;turnObj.startGame();play();");
 
         turnArea.appendChild(button1);
+        turnArea.appendChild(button2);
+        turnArea.appendChild(button3);
+        turnArea.appendChild(button4);
     }
 }
 
@@ -443,11 +460,11 @@ const play = function() {
         let highScore = -Infinity;
 
         for (let i = 0; i < score.length; i++) {
-            if (score[i].score > highScore) {
+            if (score[i].score > highScore && score[i].valid) {
                 bestMoves.length = 0;
                 bestMoves[bestMoves.length] = i;
                 highScore = score[i].score;
-            } else if (score[i].score === highScore) {
+            } else if (score[i].score === highScore && score[i].valid) {
                 bestMoves[bestMoves.length] = i;
             }
         }
