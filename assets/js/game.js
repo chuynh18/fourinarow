@@ -35,7 +35,7 @@ const gameBoard = {
     },
     checkCol: function() {
         for (let i = 0; i <= 6; i++) {
-            for (let j = 0; j < 2; j++) {
+            for (let j = 0; j <= 2; j++) {
                 const array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2], gameBoard.board[i][j+3]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
@@ -66,7 +66,7 @@ const gameBoard = {
     },
     checkRow: function() {
         for (let i = 0; i <= 3; i++) {
-            for (let j = 0; j < 6; j++) {
+            for (let j = 0; j <= 5; j++) {
                 const array = [gameBoard.board[i][j], gameBoard.board[i+1][j], gameBoard.board[i+2][j], gameBoard.board[i+3][j]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
