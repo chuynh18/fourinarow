@@ -288,6 +288,10 @@ const renderGame = function() {
     var board = document.getElementById("board");
     var turnArea = document.getElementById("turn");
 
+    var undoButton = document.createElement("button");
+    undoButton.textContent = "Undo last move";
+    undoButton.setAttribute("onclick", "gameBoard.undo()");
+
     if (turnObj.turn) {
         for (let i = 0; i < gameBoard.board.length; i++) {
             for (let j = 0; j < gameBoard.board[i].length; j++) {
@@ -311,6 +315,12 @@ const renderGame = function() {
 
         if (!turnObj.winner) {
             turnArea.textContent = "Player 1's turn";
+            turnArea.appendChild(document.createElement("br"));
+            turnArea.appendChild(undoButton);
+
+            if (turnObj.turns === 0) {
+                undoButton.disabled = true;
+            }
         }
     } else if (turnObj.turn === 2) {
         html.style.backgroundColor = "#aa8484";
@@ -318,6 +328,12 @@ const renderGame = function() {
 
         if (!turnObj.winner) {
             turnArea.textContent = "Player 2's turn";
+            turnArea.appendChild(document.createElement("br"));
+            turnArea.appendChild(undoButton);
+
+            if (turnObj.turns === 0) {
+                undoButton.disabled = true;
+            }
         }
     }
     
