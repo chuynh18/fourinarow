@@ -2,9 +2,9 @@ Four-in-a-row
 =============
 
 The plan is:
-* Get the HTML and CSS set up so that a board is represented
-* Hook into the board with some basic JavaScript and get the game board represented in code
-* Get the game logic stood up so that it can be played with two players
+* __Done:__ Get the HTML and CSS set up so that a board is represented
+* __Done:__ Hook into the board with some basic JavaScript and get the game board represented in code
+* __Done:__ Get the game logic stood up so that it can be played with two players
 * Get a basic first-pass "AI" stood up.  I don't claim to understand all the intricacies of this game, so the first-pass will probably be incredibly easy to beat.
 * Refine the AI so that it plays a little better.  This may be tricky, as I'll have to develop some insights into the game as I go along.
 
