@@ -25,6 +25,7 @@ const gameBoard = {
             if (this.board[column].indexOf(0) !== -1) {
                 this.board[column][this.board[column].indexOf(0)] = turnObj.turn;
                 turnObj.play();
+                this.check();
             } else {
                 console.log("error:  column is full");
             }
@@ -46,9 +47,12 @@ const gameBoard = {
                     gameBoard.highlightWin(i, j+2, "p2Win");
                     gameBoard.highlightWin(i, j+3, "p2Win");
 
-                    console.log("col win p2");
-                    console.log(array);
-                    console.log(`Starting cell: (${i}, ${j})`);
+                    if (featureToggle.logging.logWinDebugInfo) {
+                        console.log("col win p2");
+                        console.log(array);
+                        console.log(`Starting cell: (${i}, ${j})`);
+                    }
+                    
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
                     turnObj.winner = 1;
 
@@ -57,9 +61,11 @@ const gameBoard = {
                     gameBoard.highlightWin(i, j+2, "p1Win");
                     gameBoard.highlightWin(i, j+3, "p1Win");
 
-                    console.log("col win p1");
-                    console.log(array);
-                    console.log(`Starting cell: (${i}, ${j})`);
+                    if (featureToggle.logging.logWinDebugInfo) {
+                        console.log("col win p1");
+                        console.log(array);
+                        console.log(`Starting cell: (${i}, ${j})`);
+                    }
                 }
             }
         }
@@ -77,9 +83,12 @@ const gameBoard = {
                     gameBoard.highlightWin(i+2, j, "p2Win");
                     gameBoard.highlightWin(i+3, j, "p2Win");
 
-                    console.log("row win p2");
-                    console.log(array);
-                    console.log(`Starting cell: (${i}, ${j})`);
+                    if (featureToggle.logging.logWinDebugInfo) {
+                        console.log("row win p2");
+                        console.log(array);
+                        console.log(`Starting cell: (${i}, ${j})`);
+                    }
+
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
                     turnObj.winner = 1;
 
@@ -88,9 +97,11 @@ const gameBoard = {
                     gameBoard.highlightWin(i+2, j, "p1Win");
                     gameBoard.highlightWin(i+3, j, "p1Win");
 
-                    console.log("row win p1");
-                    console.log(array);
-                    console.log(`Starting cell: (${i}, ${j})`);
+                    if (featureToggle.logging.logWinDebugInfo) {
+                        console.log("row win p1");
+                        console.log(array);
+                        console.log(`Starting cell: (${i}, ${j})`);
+                    }
                 }
             }
         }
@@ -108,9 +119,12 @@ const gameBoard = {
                     gameBoard.highlightWin(i+2, j-2, "p2Win");
                     gameBoard.highlightWin(i+3, j-3, "p2Win");
 
-                    console.log("diagA win p2");
-                    console.log(array);
-                    console.log(`Starting cell: (${i}, ${j})`);
+                    if (featureToggle.logging.logWinDebugInfo) {
+                        console.log("diagA win p2");
+                        console.log(array);
+                        console.log(`Starting cell: (${i}, ${j})`);
+                    }
+
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
                     turnObj.winner = 1;
 
@@ -119,9 +133,11 @@ const gameBoard = {
                     gameBoard.highlightWin(i+2, j-2, "p1Win");
                     gameBoard.highlightWin(i+3, j-3, "p1Win");
 
-                    console.log("diagA win p1");
-                    console.log(array);
-                    console.log(`Starting cell: (${i}, ${j})`);
+                    if (featureToggle.logging.logWinDebugInfo) {
+                        console.log("diagA win p1");
+                        console.log(array);
+                        console.log(`Starting cell: (${i}, ${j})`);
+                    }
                 }
             }
         }
@@ -139,9 +155,12 @@ const gameBoard = {
                     gameBoard.highlightWin(i+2, j+2, "p2Win");
                     gameBoard.highlightWin(i+3, j+3, "p2Win");
 
-                    console.log("diagB win p2");
-                    console.log(array);
-                    console.log(`Starting cell: (${i}, ${j})`);
+                    if (featureToggle.logging.logWinDebugInfo) {
+                        console.log("diagB win p2");
+                        console.log(array);
+                        console.log(`Starting cell: (${i}, ${j})`);
+                    }
+
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
                     turnObj.winner = 1;
 
@@ -150,9 +169,11 @@ const gameBoard = {
                     gameBoard.highlightWin(i+2, j+2, "p1Win");
                     gameBoard.highlightWin(i+3, j+3, "p1Win");
 
-                    console.log("diagB win p1");
-                    console.log(array);
-                    console.log(`Starting cell: (${i}, ${j})`);
+                    if (featureToggle.logging.logWinDebugInfo) {
+                        console.log("diagB win p1");
+                        console.log(array);
+                        console.log(`Starting cell: (${i}, ${j})`);
+                    }
                 }
             }
         }
@@ -294,19 +315,22 @@ for (let i = 0; i < gameColumns.length; i++) {
     gameColumns[i].addEventListener("click", function(event) {
         if (turnObj.turn && !turnObj.winner) {
             if (event.target.classList.contains("circle-cell")) {
-                // console.log(event.target.parentElement.parentElement.id);
+                if (featureToggle.logging.logClicks) {
+                    console.log(event.target.parentElement.parentElement.id);
+                }
                 gameBoard.play(event.target.parentElement.parentElement.id);
-                gameBoard.check();
                 renderGame();
             } else if (event.target.classList.contains("game-cell")) {
-                // console.log(event.target.parentElement.id);
+                if (featureToggle.logging.logClicks) {
+                    console.log(event.target.parentElement.id);
+                }
                 gameBoard.play(event.target.parentElement.id);
-                gameBoard.check();
                 renderGame();
             } else if (event.target.classList.contains("game-column")) {
-                // console.log(event.target.id);
+                if (featureToggle.logging.logClicks) {
+                    console.log(event.target.id);
+                }
                 gameBoard.play(event.target.id);
-                gameBoard.check();
                 renderGame();
             }
         } else if (turnObj.winner) {
@@ -315,6 +339,57 @@ for (let i = 0; i < gameColumns.length; i++) {
             console.log("error:  developer C is a nooblord and forgot to start the game");
         }
     });
+}
+
+// ========== AI: Artificial Intelligence directed by Steven Spielberg ==========
+
+const play = function() {
+    const score = [
+        {"score": 0, "valid": false, "voters": {}},
+        {"score": 0, "valid": false, "voters": {}},
+        {"score": 0, "valid": false, "voters": {}},
+        {"score": 0, "valid": false, "voters": {}},
+        {"score": 0, "valid": false, "voters": {}},
+        {"score": 0, "valid": false, "voters": {}},
+        {"score": 0, "valid": false, "voters": {}}
+    ];
+
+    // mark non-full columns as valid plays
+    for (let i = 0; i < score.length; i++) {
+        if (gameBoard.board[i].indexOf(0) !== -1) {
+            score[i].valid = true;
+        }
+    }
+
+    // play the highest scoring move (or pick a random move amongst the highest scoring moves)
+    const playBestMove = function() {
+        const bestMoves = [];
+        let highScore = -Infinity;
+
+        for (let i = 0; i < score.length; i++) {
+            if (score[i].score > highScore) {
+                bestMoves.length = 0;
+                bestMoves[bestMoves.length] = i;
+                highScore = score[i].score;
+            } else if (score[i].score === highScore) {
+                bestMoves[bestMoves.length] = i;
+            }
+        }
+        
+        if (featureToggle.logging.logBestMoves) {
+            console.log(bestMoves);
+        }
+        
+        gameBoard.play(bestMoves[Math.floor(Math.random() * bestMoves.length)]);
+        renderGame();
+    }
+
+    playBestMove();
+
+    if (featureToggle.logging.logAIScore) {
+        console.log(score);
+    }
+    
 }
 
 // ========== function or method calls ==========
