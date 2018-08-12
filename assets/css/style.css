@@ -65,7 +65,11 @@ body {
 }
 
 .p2Win {
-    background-color: #ff5454;
+    background-color: #ff0000;
+}
+
+.hidden {
+    display: none;
 }
 
 @media only screen and (max-width: 979px) {
