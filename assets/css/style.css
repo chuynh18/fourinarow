@@ -20,6 +20,12 @@ body {
     left: 0;
 }
 
+.debug {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 .heading {
     font-size: 52pt;
 }

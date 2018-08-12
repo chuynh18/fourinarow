@@ -1,8 +1,8 @@
 "use strict";
 
-// IMPORTANT:  due to how the game works, I'm going by column then row.
-// think of the 2d array below as the game board rotated 90 degrees clockwise
-// the left side is the bottom of the board, the right side is the top
+// VERY IMPORTANT:  Due to how the game works, I'm going by column then row.
+// Think of the 2d array below as the game board rotated 90 degrees clockwise.
+// The left side is the bottom of the board, and the right side is the top.
 const gameBoard = {
     board: [
         [0,0,0,0,0,0], // column 0
@@ -26,6 +26,7 @@ const gameBoard = {
                 this.board[column][this.board[column].indexOf(0)] = turnObj.turn;
                 turnObj.play();
                 this.check();
+                turnObj.move(column);
             } else {
                 console.log("error:  column is full");
             }
@@ -33,6 +34,22 @@ const gameBoard = {
         } else {
             console.log("error:  developer C is a nooblord and forgot to start the game");
         }
+    },
+    undo: function() {
+        const lastPlay = turnObj.moveList[turnObj.moveList.length - 1];
+
+        if (lastPlay) {
+            if (gameBoard.board[lastPlay].indexOf(0) === -1) {
+                gameBoard.board[lastPlay][gameBoard.board[lastPlay].length - 1] = 0;
+            } else {
+                gameBoard.board[lastPlay][gameBoard.board[lastPlay].indexOf(0) - 1] = 0;
+            }
+    
+            turnObj.undo();
+        } else {
+            console.log("error:  no turns to undo")
+        }
+        
     },
     checkCol: function() {
         for (let i = 0; i <= 6; i++) {
@@ -194,6 +211,7 @@ const turnObj = {
     inverseTurn: 0,
     turns: 0,
     winner: 0,
+    moveList: [],
     startGame: function() {
         this.turn = 1;
         this.inverseTurn = 2;
@@ -211,6 +229,10 @@ const turnObj = {
             }
     
             this.turns++;
+
+            if (this.winner === 0 && this.turns === 42) {
+                this.winner = -1;
+            }
         }
     },
     reset: function() {
@@ -218,6 +240,39 @@ const turnObj = {
         this.inverseTurn = 0;
         this.turns = 0;
         this.winner = 0;
+        this.moveList = [];
+    },
+    move: function(play) {
+        this.moveList[this.moveList.length] = play;
+    },
+    undo: function() {
+        if (!this.winner) {
+            if (this.turn === 1) {
+                this.turn++;
+                this.inverseTurn--;
+            } else if (this.turn === 2) {
+                this.turn--;
+                this.inverseTurn++;
+            }
+
+            this.turns--;
+        } else if (this.winner) {
+            if (this.turn === 1) {
+                this.turn++;
+                this.inverseTurn--;
+            } else if (this.turn === 2) {
+                this.turn--;
+                this.inverseTurn++;
+            }
+
+            this.turns--;
+
+            this.winner = 0;
+        }
+
+        this.moveList.length -= 1;
+
+        renderGame();
     }
 }
 
@@ -227,6 +282,7 @@ const reset = function() {
     renderGame();
 }
 
+// renders the page according to game state (player turn, tied game, player won, etc.)
 const renderGame = function() {
     var html = document.getElementsByTagName("html")[0];
     var board = document.getElementById("board");
@@ -273,6 +329,10 @@ const renderGame = function() {
         turnArea.textContent = "Player 2 wins";
         html.style.backgroundColor = "#aa8484";
         board.style.backgroundColor = "#742525";
+    } else if (turnObj.winner === -1) {
+        turnArea.textContent = "Tied game";
+        html.style.backgroundColor = "#a9f5a9";
+        board.style.backgroundColor = "#04b404";
     }
 
     if (turnObj.winner) {
