@@ -60,6 +60,14 @@ body {
     background-color: #e07676;
 }
 
+.p1Win {
+    background-color: #0000ff;
+}
+
+.p2Win {
+    background-color: #ff5454;
+}
+
 @media only screen and (max-width: 979px) {
     
 }
