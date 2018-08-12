@@ -237,7 +237,7 @@ const renderGame = function() {
         }
     } else if (turnObj.turn === 2) {
         html.style.backgroundColor = "#aa8484";
-        board.style.backgroundColor = "#f3bbbb";
+        board.style.backgroundColor = "#742525";
 
         if (!turnObj.winner) {
             turnArea.textContent = "Player 2's turn";
@@ -251,7 +251,7 @@ const renderGame = function() {
     } else if (turnObj.winner === 2) {
         turnArea.textContent = "Player 2 wins";
         html.style.backgroundColor = "#aa8484";
-        board.style.backgroundColor = "#f3bbbb";
+        board.style.backgroundColor = "#742525";
     }
 
     if (turnObj.winner) {
