@@ -39,6 +39,14 @@ const gameBoard = {
                 setTimeout(function() {
                     play();
                 }, 500);
+            } else if (turnObj.mode === 2 && turnObj.turn === 2) {
+                setTimeout(function() {
+                    play();
+                }, 500);
+            } else if (turnObj.mode === 3 && turnObj.turn === 1) {
+                setTimeout(function() {
+                    play();
+                }, 500);
             }
         } else {
             console.log("error:  someone already won");
@@ -304,8 +312,12 @@ const renderGame = function() {
 
     var undoButton = document.createElement("button");
     undoButton.textContent = "Undo last move";
-    undoButton.setAttribute("onclick", "gameBoard.undo(true)");
-
+    if (turnObj.mode === 1) {
+        undoButton.setAttribute("onclick", "gameBoard.undo(true);");
+    } else {
+        undoButton.setAttribute("onclick", "gameBoard.undo(true);gameBoard.undo(true);");
+    }
+    
     if (turnObj.turn) {
         for (let i = 0; i < gameBoard.board.length; i++) {
             for (let j = 0; j < gameBoard.board[i].length; j++) {
@@ -334,6 +346,8 @@ const renderGame = function() {
 
             if (turnObj.turns === 0 || turnObj.mode === 4) {
                 undoButton.disabled = true;
+            } else if (turnObj.mode === 3) {
+                undoButton.disabled = true;
             }
         }
     } else if (turnObj.turn === 2) {
@@ -346,6 +360,10 @@ const renderGame = function() {
             turnArea.appendChild(undoButton);
 
             if (turnObj.turns === 0 || turnObj.mode === 4) {
+                undoButton.disabled = true;
+            } else if (turnObj.mode === 2) {
+                undoButton.disabled = true;
+            } else if (turnObj.mode === 3 && turnObj.turns === 1) {
                 undoButton.disabled = true;
             }
         }
@@ -389,7 +407,7 @@ const renderGame = function() {
         button2.textContent = "Human vs CPU";
         button2.setAttribute("onclick", "turnObj.mode=2;turnObj.startGame();");
         button3.textContent = "CPU vs Human";
-        button3.setAttribute("onclick", "turnObj.mode=3;turnObj.startGame();");
+        button3.setAttribute("onclick", "turnObj.mode=3;turnObj.startGame();setTimeout(function(){play()},500);");
         button4.textContent = "Spectate CPU vs CPU";
         button4.setAttribute("onclick", "turnObj.mode=4;turnObj.startGame();play();");
 
@@ -426,8 +444,10 @@ for (let i = 0; i < gameColumns.length; i++) {
                 gameBoard.play(event.target.id);
                 renderGame();
             }
-        } else if (turnObj.winner) {
+        } else if (turnObj.winner === 1 || turnObj.winner === 2) {
             console.log(`Player ${turnObj.winner} won already.`);
+        } else if (turnObj.winner === -1) {
+            console.log("The game ended in a draw.");
         } else {
             console.log("error:  developer C is a nooblord and forgot to start the game");
         }
