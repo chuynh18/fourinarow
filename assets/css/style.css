@@ -28,6 +28,11 @@ body {
     font-size: 32pt;
 }
 
+button {
+    font-size: 24pt;
+    margin: 0 5px;
+}
+
 .grid-container {
     margin: auto;
     display: inline-grid;
