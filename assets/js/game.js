@@ -20,13 +20,13 @@ const gameBoard = {
             }
         }
     },
-    play: function(column) {
+    play: function(column, simulate) {
         if (!turnObj.winner) {
             if (turnObj.turn !== 0) {
                 if (this.board[column].indexOf(0) !== -1) {
                     this.board[column][this.board[column].indexOf(0)] = turnObj.turn;
                     turnObj.play();
-                    this.check();
+                    this.check(simulate);
                     turnObj.move(column);
                 } else {
                     console.log("error:  column is full");
@@ -35,15 +35,15 @@ const gameBoard = {
                 console.log("error:  developer C is a nooblord and forgot to start the game");
             }
 
-            if (turnObj.mode === 4) {
+            if (turnObj.mode === 4 && !simulate) {
                 setTimeout(function() {
                     play();
                 }, 500);
-            } else if (turnObj.mode === 2 && turnObj.turn === 2) {
+            } else if (turnObj.mode === 2 && turnObj.turn === 2 && !simulate) {
                 setTimeout(function() {
                     play();
                 }, 500);
-            } else if (turnObj.mode === 3 && turnObj.turn === 1) {
+            } else if (turnObj.mode === 3 && turnObj.turn === 1 && !simulate) {
                 setTimeout(function() {
                     play();
                 }, 500);
@@ -68,19 +68,23 @@ const gameBoard = {
         }
         
     },
-    checkCol: function() {
+    checkCol: function(simulate) {
         for (let i = 0; i <= 6; i++) {
             for (let j = 0; j <= 2; j++) {
                 const array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2], gameBoard.board[i][j+3]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
-                    turnObj.winner = 2;
+                    if (!simulate) {
+                        turnObj.winner = 2;
 
-                    gameBoard.highlightWin(i, j, "p2Win");
-                    gameBoard.highlightWin(i, j+1, "p2Win");
-                    gameBoard.highlightWin(i, j+2, "p2Win");
-                    gameBoard.highlightWin(i, j+3, "p2Win");
-
+                        gameBoard.highlightWin(i, j, "p2Win");
+                        gameBoard.highlightWin(i, j+1, "p2Win");
+                        gameBoard.highlightWin(i, j+2, "p2Win");
+                        gameBoard.highlightWin(i, j+3, "p2Win");
+                    } else {
+                        return 2;
+                    }
+                    
                     if (featureToggle.logging.logWinDebugInfo) {
                         console.log("col win p2");
                         console.log(array);
@@ -88,12 +92,16 @@ const gameBoard = {
                     }
                     
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
-                    turnObj.winner = 1;
+                    if (!simulate) {
+                        turnObj.winner = 1;
 
-                    gameBoard.highlightWin(i, j, "p1Win");
-                    gameBoard.highlightWin(i, j+1, "p1Win");
-                    gameBoard.highlightWin(i, j+2, "p1Win");
-                    gameBoard.highlightWin(i, j+3, "p1Win");
+                        gameBoard.highlightWin(i, j, "p1Win");
+                        gameBoard.highlightWin(i, j+1, "p1Win");
+                        gameBoard.highlightWin(i, j+2, "p1Win");
+                        gameBoard.highlightWin(i, j+3, "p1Win");
+                    } else {
+                        return 1;
+                    }
 
                     if (featureToggle.logging.logWinDebugInfo) {
                         console.log("col win p1");
@@ -104,19 +112,23 @@ const gameBoard = {
             }
         }
     },
-    checkRow: function() {
+    checkRow: function(simulate) {
         for (let i = 0; i <= 3; i++) {
             for (let j = 0; j <= 5; j++) {
                 const array = [gameBoard.board[i][j], gameBoard.board[i+1][j], gameBoard.board[i+2][j], gameBoard.board[i+3][j]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
-                    turnObj.winner = 2;
+                    if (!simulate) {
+                        turnObj.winner = 2;
 
-                    gameBoard.highlightWin(i, j, "p2Win");
-                    gameBoard.highlightWin(i+1, j, "p2Win");
-                    gameBoard.highlightWin(i+2, j, "p2Win");
-                    gameBoard.highlightWin(i+3, j, "p2Win");
-
+                        gameBoard.highlightWin(i, j, "p2Win");
+                        gameBoard.highlightWin(i+1, j, "p2Win");
+                        gameBoard.highlightWin(i+2, j, "p2Win");
+                        gameBoard.highlightWin(i+3, j, "p2Win");
+                    } else {
+                        return 2;
+                    }
+    
                     if (featureToggle.logging.logWinDebugInfo) {
                         console.log("row win p2");
                         console.log(array);
@@ -124,12 +136,16 @@ const gameBoard = {
                     }
 
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
-                    turnObj.winner = 1;
+                    if (!simulate) {
+                        turnObj.winner = 1;
 
-                    gameBoard.highlightWin(i, j, "p1Win");
-                    gameBoard.highlightWin(i+1, j, "p1Win");
-                    gameBoard.highlightWin(i+2, j, "p1Win");
-                    gameBoard.highlightWin(i+3, j, "p1Win");
+                        gameBoard.highlightWin(i, j, "p1Win");
+                        gameBoard.highlightWin(i+1, j, "p1Win");
+                        gameBoard.highlightWin(i+2, j, "p1Win");
+                        gameBoard.highlightWin(i+3, j, "p1Win");
+                    } else {
+                        return 1;
+                    }
 
                     if (featureToggle.logging.logWinDebugInfo) {
                         console.log("row win p1");
@@ -140,18 +156,22 @@ const gameBoard = {
             }
         }
     },
-    checkDiagA: function() {
+    checkDiagA: function(simulate) {
         for (let i = 0; i <= 3; i++) {
             for (let j = 3; j <= 5; j++) {
                 const array = [gameBoard.board[i][j], gameBoard.board[i+1][j-1], gameBoard.board[i+2][j-2], gameBoard.board[i+3][j-3]];
                 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
-                    turnObj.winner = 2;
+                    if (!simulate) {
+                        turnObj.winner = 2;
 
-                    gameBoard.highlightWin(i, j, "p2Win");
-                    gameBoard.highlightWin(i+1, j-1, "p2Win");
-                    gameBoard.highlightWin(i+2, j-2, "p2Win");
-                    gameBoard.highlightWin(i+3, j-3, "p2Win");
+                        gameBoard.highlightWin(i, j, "p2Win");
+                        gameBoard.highlightWin(i+1, j-1, "p2Win");
+                        gameBoard.highlightWin(i+2, j-2, "p2Win");
+                        gameBoard.highlightWin(i+3, j-3, "p2Win");
+                    } else {
+                        return 2;
+                    }
 
                     if (featureToggle.logging.logWinDebugInfo) {
                         console.log("diagA win p2");
@@ -160,13 +180,17 @@ const gameBoard = {
                     }
 
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
-                    turnObj.winner = 1;
+                    if (!simulate) {
+                        turnObj.winner = 1;
 
-                    gameBoard.highlightWin(i, j, "p1Win");
-                    gameBoard.highlightWin(i+1, j-1, "p1Win");
-                    gameBoard.highlightWin(i+2, j-2, "p1Win");
-                    gameBoard.highlightWin(i+3, j-3, "p1Win");
-
+                        gameBoard.highlightWin(i, j, "p1Win");
+                        gameBoard.highlightWin(i+1, j-1, "p1Win");
+                        gameBoard.highlightWin(i+2, j-2, "p1Win");
+                        gameBoard.highlightWin(i+3, j-3, "p1Win");
+                    } else {
+                        return 1;
+                    }
+                    
                     if (featureToggle.logging.logWinDebugInfo) {
                         console.log("diagA win p1");
                         console.log(array);
@@ -176,18 +200,22 @@ const gameBoard = {
             }
         }
     },
-    checkDiagB: function() {
+    checkDiagB: function(simulate) {
         for (let i = 0; i <= 3; i++) {
             for (let j = 0; j <= 2; j++) {
                 const array = [gameBoard.board[i][j], gameBoard.board[i+1][j+1], gameBoard.board[i+2][j+2], gameBoard.board[i+3][j+3]];
                 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
-                    turnObj.winner = 2;
+                    if (!simulate) {
+                        turnObj.winner = 2;
 
-                    gameBoard.highlightWin(i, j, "p2Win");
-                    gameBoard.highlightWin(i+1, j+1, "p2Win");
-                    gameBoard.highlightWin(i+2, j+2, "p2Win");
-                    gameBoard.highlightWin(i+3, j+3, "p2Win");
+                        gameBoard.highlightWin(i, j, "p2Win");
+                        gameBoard.highlightWin(i+1, j+1, "p2Win");
+                        gameBoard.highlightWin(i+2, j+2, "p2Win");
+                        gameBoard.highlightWin(i+3, j+3, "p2Win");
+                    } else {
+                        return 2;
+                    }
 
                     if (featureToggle.logging.logWinDebugInfo) {
                         console.log("diagB win p2");
@@ -196,12 +224,16 @@ const gameBoard = {
                     }
 
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
-                    turnObj.winner = 1;
+                    if (!simulate) {
+                        turnObj.winner = 1;
 
-                    gameBoard.highlightWin(i, j, "p1Win");
-                    gameBoard.highlightWin(i+1, j+1, "p1Win");
-                    gameBoard.highlightWin(i+2, j+2, "p1Win");
-                    gameBoard.highlightWin(i+3, j+3, "p1Win");
+                        gameBoard.highlightWin(i, j, "p1Win");
+                        gameBoard.highlightWin(i+1, j+1, "p1Win");
+                        gameBoard.highlightWin(i+2, j+2, "p1Win");
+                        gameBoard.highlightWin(i+3, j+3, "p1Win");
+                    } else {
+                        return 1;
+                    }
 
                     if (featureToggle.logging.logWinDebugInfo) {
                         console.log("diagB win p1");
@@ -212,11 +244,25 @@ const gameBoard = {
             }
         }
     },
-    check: function() {
-        this.checkCol();
-        this.checkRow();
-        this.checkDiagA();
-        this.checkDiagB();
+    check: function(simulate) {
+        if (!simulate) {
+            this.checkCol();
+            this.checkRow();
+            this.checkDiagA();
+            this.checkDiagB();
+        } else {
+            const colWin = this.checkCol(simulate);
+            const rowWin = this.checkRow(simulate);
+            const diagAWin = this.checkDiagA(simulate);
+            const diagBWin = this.checkDiagB(simulate);
+
+            if (colWin === 1 || rowWin === 1 || diagAWin === 1 || diagBWin === 1) {
+                return 1;
+            } else if (colWin === 2 || rowWin === 2 || diagAWin === 2 || diagBWin === 2) {
+                return 2;
+            }
+        }
+        
     },
     highlightWin: function(i, j, playerClass) {
         document.getElementById(`${i}-${j}`).classList.add(playerClass);
