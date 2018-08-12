@@ -418,6 +418,18 @@ const renderGame = function() {
     }
 }
 
+const showDevPanel = (function() {
+    let counter = 0;
+
+    return function() {
+        counter++;
+
+        if (counter >= 15) {
+            document.getElementById("debug").classList.remove("hidden");
+        }
+    };
+})()
+
 // ========== attach event handlers ==========
 
 const gameColumns = document.getElementsByClassName("game-column");
@@ -453,6 +465,10 @@ for (let i = 0; i < gameColumns.length; i++) {
         }
     });
 }
+
+document.getElementsByClassName("heading")[0].addEventListener("click", function() {
+    showDevPanel();
+});
 
 // ========== AI: Artificial Intelligence directed by Steven Spielberg ==========
 
