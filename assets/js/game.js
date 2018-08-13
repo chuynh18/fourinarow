@@ -378,6 +378,7 @@ const turnObj = {
 const reset = function() {
     gameBoard.reset();
     turnObj.reset();
+    unhighlightAllColumns();
     renderGame();
 }
 
@@ -586,7 +587,7 @@ const modifyEventListener = function(add) {
 }
 
 const highlightColumn = function(event, highlight) {
-    if (turnObj.mode === 1 || (turnObj.mode === 2 && turnObj.turn === 1) || (turnObj.mode === 3 && turnObj.turn === 2)) {
+    if (!turnObj.winner && (turnObj.mode === 1 || (turnObj.mode === 2 && turnObj.turn === 1) || (turnObj.mode === 3 && turnObj.turn === 2))) {
         if (highlight) {
             event.target.classList.add("mouseover");
         } else {
@@ -606,7 +607,7 @@ const unhighlightAllColumns = function() {
 // ==== dev panel functions ====
 
 // populate dev panel
-const syncDevPanel = function() {
+const syncDevPanel = function(save) {
     const lookAhead = document.getElementById("toggleLookAhead");
     const blockThree = document.getElementById("toggleBlockThree");
     const connectThree = document.getElementById("toggleConnectThree");
@@ -631,7 +632,12 @@ const syncDevPanel = function() {
     logClicks.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logClicks');">${featureToggle.logging.logClicks}</button>`;
     showPlayButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'playButton');">${featureToggle.debug.playButton}</button>`;
     
-    console.log("Changes saved:");
+    if (save) {
+        console.log("Changes saved:");
+    } else {
+        console.log("Current feature toggle values:");
+    }
+    
     console.log(featureToggle);
 }
 
@@ -643,13 +649,13 @@ const flipFeatureToggle = function(path, key) {
         path[key] = true;
     }
 
-    syncDevPanel();
+    syncDevPanel(true);
 }
 
 const setSpeed = function(path, key) {
     const newSpeed = document.getElementById("inputSpeed").value;
     path[key] = Number(newSpeed);
-    syncDevPanel();
+    syncDevPanel(true);
 }
 
 // ========== AI: Artificial Intelligence directed by Steven Spielberg ==========
@@ -658,9 +664,9 @@ const play = function() {
     let score = [
         {"score": 0, "valid": false, "voters": {}},
         {"score": 0, "valid": false, "voters": {}},
-        {"score": 0, "valid": false, "voters": {}},
-        {"score": 0, "valid": false, "voters": {}},
-        {"score": 0, "valid": false, "voters": {}},
+        {"score": 1, "valid": false, "voters": {}},
+        {"score": 1, "valid": false, "voters": {}},
+        {"score": 1, "valid": false, "voters": {}},
         {"score": 0, "valid": false, "voters": {}},
         {"score": 0, "valid": false, "voters": {}}
     ];
