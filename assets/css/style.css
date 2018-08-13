@@ -145,6 +145,10 @@ button {
     margin-bottom: 5px;
 }
 
+.mouseover {
+    background-color: #ccc66c
+}
+
 @media only screen and (max-width: 730px) {
     .grid-item {
         width: 90px;

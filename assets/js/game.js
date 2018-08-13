@@ -62,10 +62,12 @@ const gameBoard = {
                     play();
                 }, featureToggle.ai.speed);
             } else if (turnObj.mode === 2 && turnObj.turn === 2 && !simulate && turnObj.winner === 0) {
+                unhighlightAllColumns();
                 setTimeout(function() {
                     play();
                 }, featureToggle.ai.speed);
             } else if (turnObj.mode === 3 && turnObj.turn === 1 && !simulate && turnObj.winner === 0) {
+                unhighlightAllColumns();
                 setTimeout(function() {
                     play();
                 }, featureToggle.ai.speed);
@@ -631,6 +633,24 @@ const modifyEventListener = function(add) {
     }
 }
 
+const highlightColumn = function(event, highlight) {
+    if (turnObj.mode === 1 || (turnObj.mode === 2 && turnObj.turn === 1) || (turnObj.mode === 3 && turnObj.turn === 2)) {
+        if (highlight) {
+            event.target.classList.add("mouseover");
+        } else {
+            event.target.classList.remove("mouseover");
+        }
+    }
+}
+
+const unhighlightAllColumns = function() {
+    const gameColumns = document.getElementsByClassName("game-column");
+
+    for (let i = 0; i < gameColumns.length; i++) {
+        gameColumns[i].classList.remove("mouseover");
+    }
+}
+
 // ==== dev panel functions ====
 
 // populate dev panel
@@ -896,13 +916,20 @@ const play = function() {
 
 // attach event handlers
 modifyEventListener(true);
-document.getElementsByClassName("heading")[0].addEventListener("click", function() {
+document.getElementById("openDevPanel").addEventListener("click", function() {
     showDevPanel();
 });
 
+const gameColumn = document.getElementsByClassName("game-column");
+for (let i = 0; i < gameColumn.length; i++) {
+    gameColumn[i].addEventListener("mouseenter", function(event){highlightColumn(event, true)});
+    gameColumn[i].addEventListener("mouseleave", function(event){highlightColumn(event, false)});
+}
+
+// render the UI
 renderGame();
 
-// dev panel modal stuff
+// closing the dev panel
 const modal = document.getElementById("devPanel");
 const span = document.getElementById("closeButton");
 
