@@ -95,20 +95,10 @@ const gameBoard = {
         }
         
     },
-    checkCol: function(simulate, three) {
-        let jEnd = 2;
-
-        if (three) {
-            jEnd = 3;
-        }
-
+    checkCol: function(simulate) {
         for (let i = 0; i <= 6; i++) {
-            for (let j = 0; j <= jEnd; j++) {
-                let array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2]];
-
-                if (!three) {
-                    array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2], gameBoard.board[i][j+3]];
-                }
+            for (let j = 0; j <= 2; j++) {
+                let array = array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2], gameBoard.board[i][j+3]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
@@ -150,19 +140,9 @@ const gameBoard = {
         }
     },
     checkRow: function(simulate, three) {
-        let iEnd = 3;
-
-        if (three) {
-            iEnd = 4;
-        }
-
-        for (let i = 0; i <= iEnd; i++) {
+        for (let i = 0; i <= 3; i++) {
             for (let j = 0; j <= 5; j++) {
-                let array = [gameBoard.board[i][j], gameBoard.board[i+1][j], gameBoard.board[i+2][j]];
-
-                if (!three) {
-                    array = [gameBoard.board[i][j], gameBoard.board[i+1][j], gameBoard.board[i+2][j], gameBoard.board[i+3][j]];
-                }
+                let array = [gameBoard.board[i][j], gameBoard.board[i+1][j], gameBoard.board[i+2][j], gameBoard.board[i+3][j]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
@@ -204,21 +184,9 @@ const gameBoard = {
         }
     },
     checkDiagA: function(simulate, three) {
-        let iEnd = 3;
-        let jStart = 3;
-
-        if (three) {
-            iEnd = 4;
-            jStart = 2;
-        }
-
-        for (let i = 0; i <= iEnd; i++) {
-            for (let j = jStart; j <= 5; j++) {
-                let array = [gameBoard.board[i][j], gameBoard.board[i+1][j-1], gameBoard.board[i+2][j-2]];
-                
-                if (!three) {
-                    array = [gameBoard.board[i][j], gameBoard.board[i+1][j-1], gameBoard.board[i+2][j-2], gameBoard.board[i+3][j-3]];
-                }
+        for (let i = 0; i <= 3; i++) {
+            for (let j = 3; j <= 5; j++) {
+                let array = [gameBoard.board[i][j], gameBoard.board[i+1][j-1], gameBoard.board[i+2][j-2], gameBoard.board[i+3][j-3]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
@@ -260,21 +228,9 @@ const gameBoard = {
         }
     },
     checkDiagB: function(simulate, three) {
-        let iEnd = 3;
-        let jEnd = 2;
-
-        if (three) {
-            iEnd = 4;
-            jEnd = 3;
-        }
-
-        for (let i = 0; i <= iEnd; i++) {
-            for (let j = 0; j <= jEnd; j++) {
-                let array = [gameBoard.board[i][j], gameBoard.board[i+1][j+1], gameBoard.board[i+2][j+2]];
-                
-                if (!three) {
-                    array = [gameBoard.board[i][j], gameBoard.board[i+1][j+1], gameBoard.board[i+2][j+2], gameBoard.board[i+3][j+3]];
-                }
+        for (let i = 0; i <= 3; i++) {
+            for (let j = 0; j <= 2; j++) {
+                let array = array = [gameBoard.board[i][j], gameBoard.board[i+1][j+1], gameBoard.board[i+2][j+2], gameBoard.board[i+3][j+3]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
@@ -315,7 +271,7 @@ const gameBoard = {
             }
         }
     },
-    check: function(simulate, three) {
+    check: function(simulate) {
         if (!simulate) {
             this.checkCol();
             this.checkRow();
@@ -326,13 +282,6 @@ const gameBoard = {
             let rowWin = this.checkRow(simulate);
             let diagAWin = this.checkDiagA(simulate);
             let diagBWin = this.checkDiagB(simulate);
-
-            if (three) {
-                colWin = this.checkCol(simulate, three);
-                rowWin = this.checkRow(simulate, three);
-                diagAWin = this.checkDiagA(simulate, three);
-                diagBWin = this.checkDiagB(simulate, three);
-            }
 
             if (colWin === 1 || rowWin === 1 || diagAWin === 1 || diagBWin === 1) {
                 return 1;
@@ -666,6 +615,7 @@ const syncDevPanel = function() {
     const logBestMoves = document.getElementById("toggleLogBestMoves");
     const logAIScore = document.getElementById("toggleLogAIScore");
     const logWinDebugInfo = document.getElementById("toggleLogWinDebugInfo");
+    const logThrees = document.getElementById("toggleLogThrees");
     const logClicks = document.getElementById("toggleLogClicks");
     const showPlayButton = document.getElementById("toggleShowPlayButton");
 
@@ -677,6 +627,7 @@ const syncDevPanel = function() {
     logBestMoves.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logBestMoves');">${featureToggle.logging.logBestMoves}</button>`;
     logAIScore.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logAIScore');">${featureToggle.logging.logAIScore}</button>`;
     logWinDebugInfo.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logWinDebugInfo');">${featureToggle.logging.logWinDebugInfo}</button>`;
+    logThrees.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logThrees');">${featureToggle.logging.logThrees}</button>`;
     logClicks.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logClicks');">${featureToggle.logging.logClicks}</button>`;
     showPlayButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'playButton');">${featureToggle.debug.playButton}</button>`;
     
@@ -964,12 +915,10 @@ const play = function() {
 
     if (featureToggle.ai.blockThree) {
         checkThree(true);
-        validityCheck();
     }
 
     if (featureToggle.ai.connectThree) {
         checkThree(false);
-        validityCheck();
     }
 
     if (featureToggle.ai.avoidNickTrap) {
