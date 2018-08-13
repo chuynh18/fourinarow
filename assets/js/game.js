@@ -655,6 +655,7 @@ const syncDevPanel = function() {
     logClicks.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logClicks');">${featureToggle.logging.logClicks}</button>`;
     showPlayButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'playButton');">${featureToggle.debug.playButton}</button>`;
     
+    console.log("Changes saved:");
     console.log(featureToggle);
 }
 
@@ -671,7 +672,7 @@ const flipFeatureToggle = function(path, key) {
 
 const setSpeed = function(path, key) {
     const newSpeed = document.getElementById("inputSpeed").value;
-    path[key] = newSpeed;
+    path[key] = Number(newSpeed);
     syncDevPanel();
 }
 
