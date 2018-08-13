@@ -20,12 +20,6 @@ body {
     left: 0;
 }
 
-.debug {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
 .heading {
     font-size: 52pt;
 }
@@ -123,10 +117,10 @@ button {
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto; 
+    background-color: #eeeeee;
+    margin: 1% auto; 
     padding: 20px;
-    border: 1px solid #888;
+    border: 2px solid #888;
     text-align: left;
     width: 520px;
 }

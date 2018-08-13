@@ -18,3 +18,5 @@ What I will _NOT_ be doing:
 Things that I would like to do better compared to [Tic-Tac-Toe](https://chuynh18.github.io/tictactoe/):
 * In Tic-Tac-Toe, I had places in code where I referred to cells on the game board by ID (0 through 8), while in other places, I used coordinate pairs (that is, [0,0] through [2,2]).  While it is trivial to convert between the two, I would like to minimize the number of conversions.  That is, I should be more thoughtful about the interface between the two "coordinate systems".
 * I would like to structure my code better, mainly by being more modular (being more intentional about dependencies).
+
+Special thanks to [Nick](https://github.com/Mosjoandy) for repeatedly defeating my scripted computer player and giving feedback.

@@ -578,8 +578,10 @@ const showDevPanel = (function() {
     return function() {
         counter++;
 
-        if (counter >= 5) {
-            document.getElementById("debug").classList.remove("hidden");
+        if (counter >= 4) {
+            syncDevPanel();
+            modal.style.display = "block";
+            counter = 0;
         }
     };
 })()
@@ -766,7 +768,7 @@ const play = function() {
 
         for (let i = 0; i < score.length; i++) {
             if (score[i].valid) {
-                // check to see if the move would block the opponent's win
+                // check to see if the move would the opponent lining up three
                 gameBoard.play(i, true, true);
                 
                 if (gameBoard.check(true, true) === currentInverseTurn) {
@@ -805,20 +807,28 @@ const play = function() {
         }
     }
 
-    const avoidNickTrap = function() {
+    const avoidNickTrap = function(direction) {
         for (let i = 1; i < score.length - 1; i++) {
             const currentRow = gameBoard.board[i].indexOf(0);
             let array;
 
             if (currentRow !== -1) {
-                array = [gameBoard.board[i-1][currentRow], gameBoard.board[i][currentRow], gameBoard.board[i+1][currentRow]];
+                if (!direction) {
+                    array = [gameBoard.board[i-1][currentRow], gameBoard.board[i][currentRow], gameBoard.board[i+1][currentRow]];
+                } else if (direction === 1 && currentRow <= 4) {
+                    array = [gameBoard.board[i-1][currentRow + 1], gameBoard.board[i][currentRow], gameBoard.board[i+1][currentRow - 1]];
+                } else if (direction === 2 && currentRow <= 4) {
+                    array = [gameBoard.board[i-1][currentRow - 1], gameBoard.board[i][currentRow], gameBoard.board[i+1][currentRow + 1]];
+                }
 
-                if (array[0] === turnObj.inverseTurn && array[2] === turnObj.inverseTurn) {
-                    score[i].score += 50;
-                    if (!score[i].voters.avoidNickTrap) {
-                        score[i].voters.avoidNickTrap = 50;
-                    } else {
-                        score[i].voters.avoidNickTrap += 50;
+                if (array !== "undefined") {
+                    if (array[0] === turnObj.inverseTurn && array[2] === turnObj.inverseTurn) {
+                        score[i].score += 50;
+                        if (!score[i].voters.avoidNickTrap) {
+                            score[i].voters.avoidNickTrap = 50;
+                        } else {
+                            score[i].voters.avoidNickTrap += 50;
+                        }
                     }
                 }
             }
@@ -871,7 +881,8 @@ const play = function() {
 
     if (featureToggle.ai.avoidNickTrap) {
         avoidNickTrap();
-        validityCheck();
+        avoidNickTrap(1);
+        avoidNickTrap(2);
     }
 
     playBestMove();
@@ -893,13 +904,7 @@ renderGame();
 
 // dev panel modal stuff
 const modal = document.getElementById("devPanel");
-const openDevPanel = document.getElementById("showDevPanel");
 const span = document.getElementById("closeButton");
-
-openDevPanel.onclick = function() {
-    syncDevPanel();
-    modal.style.display = "block";
-}
 
 span.onclick = function() {
     modal.style.display = "none";
