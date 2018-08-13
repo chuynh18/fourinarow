@@ -13,7 +13,7 @@
     <body>
         <div class="gh"><a href="https://github.com/chuynh18/fourinarow" target="_blank"><img src="assets/img/ghcorner.png" alt="GitHub repository link" /></a></div>
         <div class="debug hidden" id="debug">
-            <button onclick="">Dev panel</button>
+            <button id="showDevPanel">Dev panel</button>
         </div>
         <div class="heading">Four in a row</div>
         <div id="turn"></div>
@@ -169,7 +169,44 @@
                 
         </div>
 
-        <div id="record"></div>
+        <div id="devPanel" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeButton">&times;</span>
+                <div>
+                    <p class="sectionHeading">AI features</p>
+                    <p class="toggleOption">
+                        <span class="toggleLabel" id="labelLookAhead">lookAhead</span><span class="toggler" id="toggleLookAhead"></span>
+                    </p>
+                    <p class="toggleOption">
+                        <span class="toggleLabel" id="labelBlockThree">blockThree</span><span class="toggler" id="toggleBlockThree"></span>
+                    </p>
+                    <p class="toggleOption">
+                        <span class="toggleLabel" id="labelConnectThree">connectThree</span><span class="toggler" id="toggleConnectThree"></span>
+                    </p>
+                    <p class="toggleOption">
+                        <span class="toggleLabel" id="labelSpeed">Speed</span><span class="toggler" id="toggleSpeed"></span>
+                    </p>
+                    <p class="sectionHeading">console.log options</p>
+                    <p class="toggleOption">
+                        <span class="toggleLabel" id="labelLogBestMoves">logBestMoves</span><span class="toggler" id="toggleLogBestMoves"></span>
+                    </p>
+                    <p class="toggleOption">
+                        <span class="toggleLabel" id="labelLogAIScore">logAIScore</span><span class="toggler" id="toggleLogAIScore"></span>
+                    </p>
+                    <p class="toggleOption">
+                        <span class="toggleLabel" id="labelLogWinDebugInfo">logWinDebugInfo</span><span class="toggler" id="toggleLogWinDebugInfo"></span>
+                    </p>
+                    <p class="toggleOption">
+                        <span class="toggleLabel" id="labelLogClicks">logClicks</span><span class="toggler" id="toggleLogClicks"></span>
+                    </p>
+                    <p class="sectionHeading">Debug options</p>
+                    <p class="toggleOption">
+                        <span class="toggleLabel" id="labelShowPlayButton">Show play() button</span><span class="toggler" id="toggleShowPlayButton"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <script src="assets/js/featureToggle.js"></script>
         <script src="assets/js/game.js"></script>
     </body>

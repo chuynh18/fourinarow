@@ -10,6 +10,7 @@ The plan is:
     * Ability to add and remove the click event handlers so that the player cannot affect the game board during the computer's turn
 * __Done:__ Get a basic first-pass "AI" stood up.  I don't claim to understand all the intricacies of this game, so the first-pass will probably be incredibly easy to beat.
 * __In progress:__ Refine the AI so that it plays a little better.  This may be tricky, as I'll have to develop some insights into the game as I go along.
+    * Technically, this goal is only complete when I have a set of rules that collectively lead to the game being solved.  The game is currently in a fairly decent state, and should present a challenge to most human players.
 
 What I will _NOT_ be doing:
 * I won't be focusing on the interface so much.  This is more about getting the logic and functionality in place, as that is the challenge I am deliberately focusing on.  I will, however, make it so the page is usable on mobile as well as desktop.

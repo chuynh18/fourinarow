@@ -58,15 +58,15 @@ const gameBoard = {
             if (turnObj.mode === 4 && !simulate && turnObj.winner === 0) {
                 setTimeout(function() {
                     play();
-                }, 500);
+                }, featureToggle.ai.speed);
             } else if (turnObj.mode === 2 && turnObj.turn === 2 && !simulate && turnObj.winner === 0) {
                 setTimeout(function() {
                     play();
-                }, 500);
+                }, featureToggle.ai.speed);
             } else if (turnObj.mode === 3 && turnObj.turn === 1 && !simulate && turnObj.winner === 0) {
                 setTimeout(function() {
                     play();
-                }, 500);
+                }, featureToggle.ai.speed);
             }
         } else {
             console.log("error:  someone already won");
@@ -576,7 +576,7 @@ const showDevPanel = (function() {
     return function() {
         counter++;
 
-        if (counter >= 15) {
+        if (counter >= 5) {
             document.getElementById("debug").classList.remove("hidden");
         }
     };
@@ -625,6 +625,49 @@ const modifyEventListener = function(add) {
             gameColumns[i].removeEventListener("click", boardClick);
         }
     }
+}
+
+// ==== dev panel functions ====
+
+// populate dev panel
+const syncDevPanel = function() {
+    console.log("info: Syncing dev panel...");
+    const lookAhead = document.getElementById("toggleLookAhead");
+    const blockThree = document.getElementById("toggleBlockThree");
+    const connectThree = document.getElementById("toggleConnectThree");
+    const speed = document.getElementById("toggleSpeed");
+    const logBestMoves = document.getElementById("toggleLogBestMoves");
+    const logAIScore = document.getElementById("toggleLogAIScore");
+    const logWinDebugInfo = document.getElementById("toggleLogWinDebugInfo");
+    const logClicks = document.getElementById("toggleLogClicks");
+    const showPlayButton = document.getElementById("toggleShowPlayButton");
+
+    lookAhead.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'lookAhead');">${featureToggle.ai.lookAhead}</button>`;
+    blockThree.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'blockThree');">${featureToggle.ai.blockThree}</button>`;
+    connectThree.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'connectThree');">${featureToggle.ai.connectThree}</button>`;
+    speed.innerHTML = `<button class="featureToggler" id="setSpeed" onclick="setSpeed(featureToggle.ai, 'speed');">Set</button><form id="formSpeed"><input type="number" id="inputSpeed" value="${featureToggle.ai.speed}"></input></form>`;
+    logBestMoves.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logBestMoves');">${featureToggle.logging.logBestMoves}</button>`;
+    logAIScore.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logAIScore');">${featureToggle.logging.logAIScore}</button>`;
+    logWinDebugInfo.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logWinDebugInfo');">${featureToggle.logging.logWinDebugInfo}</button>`;
+    logClicks.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logClicks');">${featureToggle.logging.logClicks}</button>`;
+    showPlayButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'playButton');">${featureToggle.debug.playButton}</button>`;
+}
+
+// const flipFeatureToggle
+const flipFeatureToggle = function(path, key) {
+    if (path[key] === true) {
+        path[key] = false;
+    } else {
+        path[key] = true;
+    }
+
+    syncDevPanel();
+}
+
+const setSpeed = function(path, key) {
+    const newSpeed = document.getElementById("inputSpeed").value;
+    path[key] = newSpeed;
+    syncDevPanel();
 }
 
 // ========== AI: Artificial Intelligence directed by Steven Spielberg ==========
@@ -816,3 +859,23 @@ document.getElementsByClassName("heading")[0].addEventListener("click", function
 });
 
 renderGame();
+
+// dev panel modal stuff
+const modal = document.getElementById("devPanel");
+const openDevPanel = document.getElementById("showDevPanel");
+const span = document.getElementById("closeButton");
+
+openDevPanel.onclick = function() {
+    syncDevPanel();
+    modal.style.display = "block";
+}
+
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}

@@ -4,7 +4,8 @@ const featureToggle = {
     "ai": {
         "lookAhead": true,
         "blockThree": true,
-        "connectThree": true
+        "connectThree": true,
+        "speed": 500
     },
     "logging": {
         "logBestMoves": true,
