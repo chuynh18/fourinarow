@@ -23,6 +23,8 @@ const gameBoard = {
             [2,1,2,1,0,0],
             [1,2,1,2,0,0]
         ];
+        turnObj.turns = 28;
+        turnObj.moveList = [0,0,0,0,1,1,1,1,2,2,2,2,6,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6];
         renderGame();
     },
     reset: function() {
@@ -711,7 +713,6 @@ const play = function() {
 
     // start blocking the moment opponent has 3 in a row
     const blockThree = function() {
-        const currentTurn = turnObj.turn;
         const currentInverseTurn = turnObj.inverseTurn;
 
         for (let i = 0; i < score.length; i++) {
@@ -725,6 +726,28 @@ const play = function() {
                         score[i].voters.blockThree = 15;
                     } else {
                         score[i].voters.blockThree += 15;
+                    }
+                }
+
+                gameBoard.undo(false);
+            }
+        }
+    }
+
+    // try to make three in a row
+    const connectThree = function() {
+        const currentTurn = turnObj.turn;
+
+        for (let i = 0; i < score.length; i++) {
+            if (score[i].valid) {
+                gameBoard.play(i, true);
+                
+                if (gameBoard.check(true, true) === currentTurn) {
+                    score[i].score += 10;
+                    if (!score[i].voters.connectThree) {
+                        score[i].voters.connectThree = 10;
+                    } else {
+                        score[i].voters.connectThree += 10;
                     }
                 }
 
@@ -769,6 +792,11 @@ const play = function() {
 
     if (featureToggle.ai.blockThree) {
         blockThree();
+        validityCheck();
+    }
+
+    if (featureToggle.ai.connectThree) {
+        connectThree();
         validityCheck();
     }
 

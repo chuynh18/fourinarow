@@ -3,7 +3,8 @@
 const featureToggle = {
     "ai": {
         "lookAhead": true,
-        "blockThree": true
+        "blockThree": true,
+        "connectThree": true
     },
     "logging": {
         "logBestMoves": true,
