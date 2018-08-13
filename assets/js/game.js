@@ -20,11 +20,16 @@ const gameBoard = {
             }
         }
     },
-    play: function(column, simulate) {
+    play: function(column, simulate, opposite) {
         if (!turnObj.winner) {
             if (turnObj.turn !== 0) {
                 if (this.board[column].indexOf(0) !== -1) {
-                    this.board[column][this.board[column].indexOf(0)] = turnObj.turn;
+                    if (opposite) {
+                        this.board[column][this.board[column].indexOf(0)] = turnObj.inverseTurn;
+                    } else {
+                        this.board[column][this.board[column].indexOf(0)] = turnObj.turn;
+                    }
+
                     turnObj.play();
                     this.check(simulate);
                     turnObj.move(column);
@@ -35,15 +40,15 @@ const gameBoard = {
                 console.log("error:  developer C is a nooblord and forgot to start the game");
             }
 
-            if (turnObj.mode === 4 && !simulate) {
+            if (turnObj.mode === 4 && !simulate && turnObj.winner === 0) {
                 setTimeout(function() {
                     play();
                 }, 500);
-            } else if (turnObj.mode === 2 && turnObj.turn === 2 && !simulate) {
+            } else if (turnObj.mode === 2 && turnObj.turn === 2 && !simulate && turnObj.winner === 0) {
                 setTimeout(function() {
                     play();
                 }, 500);
-            } else if (turnObj.mode === 3 && turnObj.turn === 1 && !simulate) {
+            } else if (turnObj.mode === 3 && turnObj.turn === 1 && !simulate && turnObj.winner === 0) {
                 setTimeout(function() {
                     play();
                 }, 500);
@@ -560,6 +565,7 @@ const play = function() {
 
     // ==== voters here ====
 
+    // looks ahead 2 turns
     const lookAhead = function() {
         const currentTurnNumber = turnObj.turns;
         const currentTurn = turnObj.turn;
@@ -567,10 +573,23 @@ const play = function() {
 
         for (let i = 0; i < score.length; i++) {
             if (score[i].valid) {
-                gameBoard.play(i, true);
-                console.log(turnObj.moveList);
+                // check to see if the move would block the opponent's win
+                gameBoard.play(i, true, true);
+                
+                if (gameBoard.check(true) === currentInverseTurn) {
+                    score[i].score += 25;
+                    if (!score[i].voters.blockOpponentWin) {
+                        score[i].voters.blockOpponentWin = 25;
+                    } else {
+                        score[i].voters.blockOpponentWin += 25;
+                    }
+                }
+
+                gameBoard.undo(false);
 
                 // check to see if the move being considered would lead to a win
+                gameBoard.play(i, true);
+
                 if (gameBoard.check(true) === currentTurn) {
                     score[i].score += 100;
                     if (!score[i].voters.winningMove) {
@@ -581,7 +600,6 @@ const play = function() {
                 }
 
                 gameBoard.undo(false);
-                console.log("undid a move");
             }
         }
     }
@@ -590,7 +608,6 @@ const play = function() {
         lookAhead();
     }
   
-
     // play the highest scoring move (or pick a random move amongst the highest scoring moves)
     const playBestMove = function() {
         const bestMoves = [];
