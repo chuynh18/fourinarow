@@ -5,6 +5,7 @@ const featureToggle = {
         "lookAhead": true,
         "blockThree": true,
         "connectThree": true,
+        "avoidNickTrap": true,
         "speed": 500
     },
     "logging": {

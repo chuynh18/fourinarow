@@ -631,10 +631,10 @@ const modifyEventListener = function(add) {
 
 // populate dev panel
 const syncDevPanel = function() {
-    console.log("info: Syncing dev panel...");
     const lookAhead = document.getElementById("toggleLookAhead");
     const blockThree = document.getElementById("toggleBlockThree");
     const connectThree = document.getElementById("toggleConnectThree");
+    const avoidNickTrap = document.getElementById("toggleAvoidNickTrap");
     const speed = document.getElementById("toggleSpeed");
     const logBestMoves = document.getElementById("toggleLogBestMoves");
     const logAIScore = document.getElementById("toggleLogAIScore");
@@ -645,12 +645,15 @@ const syncDevPanel = function() {
     lookAhead.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'lookAhead');">${featureToggle.ai.lookAhead}</button>`;
     blockThree.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'blockThree');">${featureToggle.ai.blockThree}</button>`;
     connectThree.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'connectThree');">${featureToggle.ai.connectThree}</button>`;
+    avoidNickTrap.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'avoidNickTrap');">${featureToggle.ai.avoidNickTrap}</button>`;
     speed.innerHTML = `<button class="featureToggler" id="setSpeed" onclick="setSpeed(featureToggle.ai, 'speed');">Set</button><form id="formSpeed"><input type="number" id="inputSpeed" value="${featureToggle.ai.speed}"></input></form>`;
     logBestMoves.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logBestMoves');">${featureToggle.logging.logBestMoves}</button>`;
     logAIScore.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logAIScore');">${featureToggle.logging.logAIScore}</button>`;
     logWinDebugInfo.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logWinDebugInfo');">${featureToggle.logging.logWinDebugInfo}</button>`;
     logClicks.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logClicks');">${featureToggle.logging.logClicks}</button>`;
     showPlayButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'playButton');">${featureToggle.debug.playButton}</button>`;
+    
+    console.log(featureToggle);
 }
 
 // const flipFeatureToggle
@@ -799,6 +802,26 @@ const play = function() {
         }
     }
 
+    const avoidNickTrap = function() {
+        for (let i = 1; i < score.length - 1; i++) {
+            const currentRow = gameBoard.board[i].indexOf(0);
+            let array;
+
+            if (currentRow !== -1) {
+                array = [gameBoard.board[i-1][currentRow], gameBoard.board[i][currentRow], gameBoard.board[i+1][currentRow]];
+
+                if (array[0] === turnObj.inverseTurn && array[2] === turnObj.inverseTurn) {
+                    score[i].score += 50;
+                    if (!score[i].voters.avoidNickTrap) {
+                        score[i].voters.avoidNickTrap = 50;
+                    } else {
+                        score[i].voters.avoidNickTrap += 50;
+                    }
+                }
+            }
+        }
+    }
+
     // play the highest scoring move (or pick a random move amongst the highest scoring moves)
     const playBestMove = function() {
         const bestMoves = [];
@@ -819,7 +842,7 @@ const play = function() {
         }
 
         const moveToPlay = Math.floor(Math.random() * bestMoves.length)
-        console.log(`Move to play: ${moveToPlay}`);
+        console.log(`Column played: ${bestMoves[moveToPlay]}`);
         gameBoard.play(bestMoves[moveToPlay]);
         renderGame();
     }
@@ -840,6 +863,11 @@ const play = function() {
 
     if (featureToggle.ai.connectThree) {
         connectThree();
+        validityCheck();
+    }
+
+    if (featureToggle.ai.avoidNickTrap) {
+        avoidNickTrap();
         validityCheck();
     }
 

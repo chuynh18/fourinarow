@@ -211,6 +211,22 @@ button {
     .game-cell {
         height: 70px;
     }
+
+    .modal-content {
+        width: 380px;
+    }
+
+    .toggleLabel {
+        width: 280px;
+    }
+
+    #labelSpeed {
+        width: 90px;
+    }
+
+    #setSpeed {
+        margin-right: 18px;
+    }
 }
 
 @media only screen and (max-width: 525px) {
