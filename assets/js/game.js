@@ -13,6 +13,18 @@ const gameBoard = {
         [0,0,0,0,0,0], // column 5
         [0,0,0,0,0,0]  // column 6
     ],
+    loadDebugBoard: function() {
+        this.board = [
+            [1,2,1,2,0,0],
+            [1,2,1,2,0,0],
+            [1,2,1,2,0,0],
+            [2,1,2,1,0,0],
+            [2,1,2,1,0,0],
+            [2,1,2,1,0,0],
+            [1,2,1,2,0,0]
+        ];
+        renderGame();
+    },
     reset: function() {
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
@@ -34,7 +46,8 @@ const gameBoard = {
                     this.check(simulate);
                     turnObj.move(column);
                 } else {
-                    console.log("error:  column is full");
+                    console.log(`error:  column ${column} is full`);
+                    console.log(gameBoard.board);
                 }
             } else {
                 console.log("error:  developer C is a nooblord and forgot to start the game");
@@ -367,6 +380,11 @@ const renderGame = function() {
 
     var undoButton = document.createElement("button");
     undoButton.textContent = "Undo last move";
+
+    var playButton = document.createElement("button");
+    playButton.textContent = "play()";
+    playButton.setAttribute("onclick", "play()");
+
     if (turnObj.mode === 1) {
         undoButton.setAttribute("onclick", "gameBoard.undo(true);");
     } else {
@@ -404,6 +422,7 @@ const renderGame = function() {
             turnArea.textContent = "Player 1's turn";
             turnArea.appendChild(document.createElement("br"));
             turnArea.appendChild(undoButton);
+            turnArea.appendChild(playButton);
 
             if (turnObj.turns === 0 || turnObj.mode === 4) {
                 undoButton.disabled = true;
@@ -422,6 +441,7 @@ const renderGame = function() {
             turnArea.textContent = "Player 2's turn";
             turnArea.appendChild(document.createElement("br"));
             turnArea.appendChild(undoButton);
+            turnArea.appendChild(playButton);
 
             if (turnObj.turns === 0 || turnObj.mode === 4) {
                 undoButton.disabled = true;
@@ -546,7 +566,7 @@ const modifyEventListener = function(add) {
 // ========== AI: Artificial Intelligence directed by Steven Spielberg ==========
 
 const play = function() {
-    const score = [
+    let score = [
         {"score": 0, "valid": false, "voters": {}},
         {"score": 0, "valid": false, "voters": {}},
         {"score": 0, "valid": false, "voters": {}},
@@ -557,17 +577,22 @@ const play = function() {
     ];
 
     // mark non-full columns as valid plays
-    for (let i = 0; i < score.length; i++) {
-        if (gameBoard.board[i].indexOf(0) !== -1) {
-            score[i].valid = true;
+    const validityCheck = function() {
+        for (let i = 0; i < score.length; i++) {
+            if (gameBoard.board[i].indexOf(0) !== -1) {
+                score[i].valid = true;
+            } else {
+                score[i].valid = false;
+            }
         }
     }
+
+    validityCheck();
 
     // ==== voters here ====
 
     // looks ahead 2 turns
     const lookAhead = function() {
-        const currentTurnNumber = turnObj.turns;
         const currentTurn = turnObj.turn;
         const currentInverseTurn = turnObj.inverseTurn;
 
@@ -599,6 +624,26 @@ const play = function() {
                     }
                 }
 
+                validityCheck();
+
+                // check to see if the opponent's followup move would be a winning play
+                for (let j = 0; j < score.length; j++) {
+                    if (score[j].valid) {
+                        gameBoard.play(j, true);
+
+                        if (gameBoard.check(true) === currentInverseTurn) {
+                            score[i].score -= 10;
+                            if (!score[i].voters.opponentWouldWin) {
+                                score[i].voters.opponentWouldWin = -10;
+                            } else {
+                                score[i].voters.opponentWouldWin -= 10;
+                            }
+                        }
+
+                        gameBoard.undo(false);
+                    }
+                }
+
                 gameBoard.undo(false);
             }
         }
@@ -607,6 +652,8 @@ const play = function() {
     if (featureToggle.ai.lookAhead) {
         lookAhead();
     }
+
+    validityCheck();
   
     // play the highest scoring move (or pick a random move amongst the highest scoring moves)
     const playBestMove = function() {
@@ -626,8 +673,10 @@ const play = function() {
         if (featureToggle.logging.logBestMoves) {
             console.log(bestMoves);
         }
-        
-        gameBoard.play(bestMoves[Math.floor(Math.random() * bestMoves.length)]);
+
+        const moveToPlay = Math.floor(Math.random() * bestMoves.length)
+        console.log(`Move to play: ${moveToPlay}`);
+        gameBoard.play(bestMoves[moveToPlay]);
         renderGame();
     }
 
@@ -635,8 +684,7 @@ const play = function() {
 
     if (featureToggle.logging.logAIScore) {
         console.log(score);
-    }
-    
+    } 
 }
 
 // ========== function or method calls ==========
