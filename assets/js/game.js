@@ -45,7 +45,9 @@ const gameBoard = {
                     }
 
                     turnObj.play();
-                    this.check(simulate);
+                    if (!simulate){
+                        this.check();
+                    }
                     turnObj.move(column);
                 } else {
                     console.log(`error:  column ${column} is full`);
@@ -740,11 +742,11 @@ const play = function() {
                         gameBoard.play(j, true);
 
                         if (gameBoard.check(true) === currentInverseTurn) {
-                            score[i].score -= 10;
+                            score[i].score -= 20;
                             if (!score[i].voters.opponentWouldWin) {
-                                score[i].voters.opponentWouldWin = -10;
+                                score[i].voters.opponentWouldWin = -20;
                             } else {
-                                score[i].voters.opponentWouldWin -= 10;
+                                score[i].voters.opponentWouldWin -= 20;
                             }
                         }
 
