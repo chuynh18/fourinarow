@@ -55,7 +55,7 @@ const gameBoard = {
     undo: function(rerender) {
         const lastPlay = turnObj.moveList[turnObj.moveList.length - 1];
 
-        if (lastPlay) {
+        if (lastPlay !== "undefined") {
             if (gameBoard.board[lastPlay].indexOf(0) === -1) {
                 gameBoard.board[lastPlay][gameBoard.board[lastPlay].length - 1] = 0;
             } else {
@@ -75,7 +75,7 @@ const gameBoard = {
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
-                        turnObj.winner = 2;
+                        turnObj.setWinner(2);
 
                         gameBoard.highlightWin(i, j, "p2Win");
                         gameBoard.highlightWin(i, j+1, "p2Win");
@@ -93,7 +93,7 @@ const gameBoard = {
                     
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
                     if (!simulate) {
-                        turnObj.winner = 1;
+                        turnObj.setWinner(1);
 
                         gameBoard.highlightWin(i, j, "p1Win");
                         gameBoard.highlightWin(i, j+1, "p1Win");
@@ -119,7 +119,7 @@ const gameBoard = {
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
-                        turnObj.winner = 2;
+                        turnObj.setWinner(2);
 
                         gameBoard.highlightWin(i, j, "p2Win");
                         gameBoard.highlightWin(i+1, j, "p2Win");
@@ -137,7 +137,7 @@ const gameBoard = {
 
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
                     if (!simulate) {
-                        turnObj.winner = 1;
+                        turnObj.setWinner(1);
 
                         gameBoard.highlightWin(i, j, "p1Win");
                         gameBoard.highlightWin(i+1, j, "p1Win");
@@ -163,7 +163,7 @@ const gameBoard = {
                 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
-                        turnObj.winner = 2;
+                        turnObj.setWinner(2);
 
                         gameBoard.highlightWin(i, j, "p2Win");
                         gameBoard.highlightWin(i+1, j-1, "p2Win");
@@ -181,7 +181,7 @@ const gameBoard = {
 
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
                     if (!simulate) {
-                        turnObj.winner = 1;
+                        turnObj.setWinner(1);
 
                         gameBoard.highlightWin(i, j, "p1Win");
                         gameBoard.highlightWin(i+1, j-1, "p1Win");
@@ -207,7 +207,7 @@ const gameBoard = {
                 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
-                        turnObj.winner = 2;
+                        turnObj.setWinner(2);
 
                         gameBoard.highlightWin(i, j, "p2Win");
                         gameBoard.highlightWin(i+1, j+1, "p2Win");
@@ -225,7 +225,7 @@ const gameBoard = {
 
                 } else if (array.indexOf(0) === -1 && array.indexOf(2) === -1) {
                     if (!simulate) {
-                        turnObj.winner = 1;
+                        turnObj.setWinner(1);
 
                         gameBoard.highlightWin(i, j, "p1Win");
                         gameBoard.highlightWin(i+1, j+1, "p1Win");
@@ -294,6 +294,7 @@ const turnObj = {
     
             this.turns++;
 
+            // tied game
             if (this.winner === 0 && this.turns === 42) {
                 this.winner = -1;
             }
@@ -341,6 +342,9 @@ const turnObj = {
             renderGame();
         }
         
+    },
+    setWinner: function(player) {
+        this.winner = player;
     }
 }
 
@@ -520,8 +524,6 @@ const boardClick = function(event) {
     }
 }
 
-// ========== attach event handlers ==========
-
 const modifyEventListener = function(add) {
     const gameColumns = document.getElementsByClassName("game-column");
 
@@ -535,12 +537,6 @@ const modifyEventListener = function(add) {
         }
     }
 }
-
-modifyEventListener(true);
-
-document.getElementsByClassName("heading")[0].addEventListener("click", function() {
-    showDevPanel();
-});
 
 // ========== AI: Artificial Intelligence directed by Steven Spielberg ==========
 
@@ -561,6 +557,39 @@ const play = function() {
             score[i].valid = true;
         }
     }
+
+    // ==== voters here ====
+
+    const lookAhead = function() {
+        const currentTurnNumber = turnObj.turns;
+        const currentTurn = turnObj.turn;
+        const currentInverseTurn = turnObj.inverseTurn;
+
+        for (let i = 0; i < score.length; i++) {
+            if (score[i].valid) {
+                gameBoard.play(i, true);
+                console.log(turnObj.moveList);
+
+                // check to see if the move being considered would lead to a win
+                if (gameBoard.check(true) === currentTurn) {
+                    score[i].score += 100;
+                    if (!score[i].voters.winningMove) {
+                        score[i].voters.winningMove = 100;
+                    } else {
+                        score[i].voters.winningMove += 100;
+                    }
+                }
+
+                gameBoard.undo(false);
+                console.log("undid a move");
+            }
+        }
+    }
+
+    if (featureToggle.ai.lookAhead) {
+        lookAhead();
+    }
+  
 
     // play the highest scoring move (or pick a random move amongst the highest scoring moves)
     const playBestMove = function() {
@@ -594,5 +623,11 @@ const play = function() {
 }
 
 // ========== function or method calls ==========
+
+// attach event handlers
+modifyEventListener(true);
+document.getElementsByClassName("heading")[0].addEventListener("click", function() {
+    showDevPanel();
+});
 
 renderGame();
