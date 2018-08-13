@@ -793,7 +793,7 @@ const play = function() {
                             console.log(`info: playing column ${i} would block the opponent due to ${property}:`, master[property]);
                         }
 
-                        score[i].score += 10;
+                        score[i].score += 15;
 
                         if (property !== "arrayDown") {
                             score[i].score += 5;
@@ -806,9 +806,9 @@ const play = function() {
                         }
 
                         if (!score[i].voters.blockThree) {
-                            score[i].voters.blockThree = 10;
+                            score[i].voters.blockThree = 15;
                         } else {
-                            score[i].voters.blockThree += 10;
+                            score[i].voters.blockThree += 15;
                         }
                     }
                 } else {
