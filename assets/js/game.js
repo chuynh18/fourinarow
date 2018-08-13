@@ -422,9 +422,17 @@ const renderGame = function() {
             turnArea.textContent = "Player 1's turn";
             turnArea.appendChild(document.createElement("br"));
             turnArea.appendChild(undoButton);
-            turnArea.appendChild(playButton);
 
-            if (turnObj.turns === 0 || turnObj.mode === 4) {
+            if (featureToggle.debug.playButton) {
+                turnArea.appendChild(playButton);
+            }
+            
+            if (turnObj.turns === 0) {
+                undoButton.disabled = true;
+                if (turnObj.mode === 2) {
+                    modifyEventListener(true);
+                }
+            } else if (turnObj.mode === 4) {
                 undoButton.disabled = true;
             } else if (turnObj.mode === 3) {
                 undoButton.disabled = true;
@@ -441,7 +449,10 @@ const renderGame = function() {
             turnArea.textContent = "Player 2's turn";
             turnArea.appendChild(document.createElement("br"));
             turnArea.appendChild(undoButton);
-            turnArea.appendChild(playButton);
+            
+            if (featureToggle.debug.playButton) {
+                turnArea.appendChild(playButton);
+            }
 
             if (turnObj.turns === 0 || turnObj.mode === 4) {
                 undoButton.disabled = true;
@@ -576,7 +587,7 @@ const play = function() {
         {"score": 0, "valid": false, "voters": {}}
     ];
 
-    // mark non-full columns as valid plays
+    // mark non-full columns as valid plays and vice versa
     const validityCheck = function() {
         for (let i = 0; i < score.length; i++) {
             if (gameBoard.board[i].indexOf(0) !== -1) {
@@ -587,9 +598,7 @@ const play = function() {
         }
     }
 
-    validityCheck();
-
-    // ==== voters here ====
+    // ==== AI voter definitions here ====
 
     // looks ahead 2 turns
     const lookAhead = function() {
@@ -649,12 +658,6 @@ const play = function() {
         }
     }
 
-    if (featureToggle.ai.lookAhead) {
-        lookAhead();
-    }
-
-    validityCheck();
-  
     // play the highest scoring move (or pick a random move amongst the highest scoring moves)
     const playBestMove = function() {
         const bestMoves = [];
@@ -678,6 +681,15 @@ const play = function() {
         console.log(`Move to play: ${moveToPlay}`);
         gameBoard.play(bestMoves[moveToPlay]);
         renderGame();
+    }
+
+    // ==== AI function calls here ====
+
+    validityCheck();
+
+    if (featureToggle.ai.lookAhead) {
+        lookAhead();
+        validityCheck();
     }
 
     playBestMove();

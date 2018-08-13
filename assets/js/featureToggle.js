@@ -9,5 +9,8 @@ const featureToggle = {
         "logAIScore": true,
         "logWinDebugInfo": true,
         "logClicks": false
+    },
+    "debug": {
+        "playButton": false
     }
 };
