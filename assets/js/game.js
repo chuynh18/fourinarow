@@ -98,7 +98,7 @@ const gameBoard = {
     checkCol: function(simulate) {
         for (let i = 0; i <= 6; i++) {
             for (let j = 0; j <= 2; j++) {
-                let array = array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2], gameBoard.board[i][j+3]];
+                let array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2], gameBoard.board[i][j+3]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
@@ -230,7 +230,7 @@ const gameBoard = {
     checkDiagB: function(simulate, three) {
         for (let i = 0; i <= 3; i++) {
             for (let j = 0; j <= 2; j++) {
-                let array = array = [gameBoard.board[i][j], gameBoard.board[i+1][j+1], gameBoard.board[i+2][j+2], gameBoard.board[i+3][j+3]];
+                let array = [gameBoard.board[i][j], gameBoard.board[i+1][j+1], gameBoard.board[i+2][j+2], gameBoard.board[i+3][j+3]];
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
