@@ -12,7 +12,8 @@ const featureToggle = {
         "logBestMoves": true,
         "logAIScore": true,
         "logWinDebugInfo": true,
-        "logClicks": false
+        "logClicks": false,
+        "logThrees": true
     },
     "debug": {
         "playButton": false

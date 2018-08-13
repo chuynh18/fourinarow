@@ -60,16 +60,19 @@ const gameBoard = {
             if (turnObj.mode === 4 && !simulate && turnObj.winner === 0) {
                 setTimeout(function() {
                     play();
+                    console.log("");
                 }, featureToggle.ai.speed);
             } else if (turnObj.mode === 2 && turnObj.turn === 2 && !simulate && turnObj.winner === 0) {
                 unhighlightAllColumns();
                 setTimeout(function() {
                     play();
+                    console.log("");
                 }, featureToggle.ai.speed);
             } else if (turnObj.mode === 3 && turnObj.turn === 1 && !simulate && turnObj.winner === 0) {
                 unhighlightAllColumns();
                 setTimeout(function() {
                     play();
+                    console.log("");
                 }, featureToggle.ai.speed);
             }
         } else {
@@ -765,11 +768,11 @@ const play = function() {
                         gameBoard.play(j, true);
 
                         if (gameBoard.check(true) === currentInverseTurn) {
-                            score[i].score -= 20;
+                            score[i].score -= 60;
                             if (!score[i].voters.opponentWouldWin) {
-                                score[i].voters.opponentWouldWin = -20;
+                                score[i].voters.opponentWouldWin = -60;
                             } else {
-                                score[i].voters.opponentWouldWin -= 20;
+                                score[i].voters.opponentWouldWin -= 60;
                             }
                         }
 
@@ -782,48 +785,118 @@ const play = function() {
         }
     }
 
-    // start blocking the moment opponent has 3 in a row
-    const blockThree = function() {
-        const currentInverseTurn = turnObj.inverseTurn;
+    // attempt to connect 3 or block opponent from getting 3 in a row
+    const checkThree = function(block) {
+        let master = {
+            arrayDown: [],
+            arrayLeft: [],
+            arrayRight: [],
+            arrayDiagLeftDown: [],
+            arrayDiagLeftUp: [],
+            arrayDiagRightDown: [],
+            arrayDiagRightUp: []
+        };
 
-        for (let i = 0; i < score.length; i++) {
-            if (score[i].valid) {
-                // check to see if the move would the opponent lining up three
-                gameBoard.play(i, true, true);
-                
-                if (gameBoard.check(true, true) === currentInverseTurn) {
-                    score[i].score += 15;
-                    if (!score[i].voters.blockThree) {
-                        score[i].voters.blockThree = 15;
-                    } else {
-                        score[i].voters.blockThree += 15;
-                    }
-                }
-
-                gameBoard.undo(false);
+        const checkArray = function(array) {
+            if (array[0] === 1 && array[1] === 1) {
+                return 1;
+            } else if (array[0] === 2 && array[1] === 2) {
+                return 2;
             }
         }
-    }
-
-    // try to make three in a row
-    const connectThree = function() {
-        const currentTurn = turnObj.turn;
 
         for (let i = 0; i < score.length; i++) {
-            if (score[i].valid) {
-                gameBoard.play(i, true);
+            const currentRow = gameBoard.board[i].indexOf(0);
+            // console.log(`for column ${i}, currentRow is ${currentRow}`);
+
+            if (currentRow !== -1) {
+                if (currentRow >= 2) {
+                    master.arrayDown = [gameBoard.board[i][currentRow-1], gameBoard.board[i][currentRow-2]];
+                }
                 
-                if (gameBoard.check(true, true) === currentTurn) {
-                    score[i].score += 10;
-                    if (!score[i].voters.connectThree) {
-                        score[i].voters.connectThree = 10;
-                    } else {
-                        score[i].voters.connectThree += 10;
+                if (i >= 2) {
+                    master.arrayLeft = [gameBoard.board[i-1][currentRow], gameBoard.board[i-2][currentRow]];
+                    if (currentRow >= 2) {
+                        master.arrayDiagLeftDown = [gameBoard.board[i-1][currentRow-1], gameBoard.board[i-2][currentRow-2]];
+                    }
+                    if (currentRow <= 3) {
+                        master.arrayDiagLeftUp = [gameBoard.board[i-1][currentRow+1], gameBoard.board[i-2][currentRow+2]];
                     }
                 }
 
-                gameBoard.undo(false);
+                if (i <= 4) {
+                    master.arrayRight = [gameBoard.board[i+1][currentRow], gameBoard.board[i+2][currentRow]];
+                    if (currentRow >= 2) {
+                        master.arrayDiagRightDown = [gameBoard.board[i+1][currentRow-1], gameBoard.board[i+2][currentRow-2]];
+                    }
+                    if (currentRow <= 3) {
+                        master.arrayDiagRightUp = [gameBoard.board[i+1][currentRow+1], gameBoard.board[i+2][currentRow+2]];
+                    }
+                }
             }
+
+            for (let property in master) {
+                if (block) {
+                    if (checkArray(master[property]) === turnObj.inverseTurn) {
+                        if (featureToggle.logging.logThrees) {
+                            console.log(`info: playing column ${i} would block the opponent due to ${property}:`, master[property]);
+                        }
+
+                        score[i].score += 10;
+
+                        if (property !== "arrayDown") {
+                            score[i].score += 5;
+
+                            if (!score[i].voters.blockThree) {
+                                score[i].voters.blockThree = 5;
+                            } else {
+                                score[i].voters.blockThree += 5;
+                            }
+                        }
+
+                        if (!score[i].voters.blockThree) {
+                            score[i].voters.blockThree = 10;
+                        } else {
+                            score[i].voters.blockThree += 10;
+                        }
+                    }
+                } else {
+                    if (checkArray(master[property]) === turnObj.turn) {
+                        if (featureToggle.logging.logThrees) {
+                            console.log(`info: playing column ${i} would create a line of 3 due to ${property}:`, master[property]);
+                        }
+
+                        score[i].score += 10;
+
+                        if (property !== "arrayDown") {
+                            score[i].score += 5;
+
+                            if (!score[i].voters.connectThree) {
+                                score[i].voters.connectThree = 5;
+                            } else {
+                                score[i].voters.connectThree += 5;
+                            }
+                        }
+
+                        if (!score[i].voters.connectThree) {
+                            score[i].voters.connectThree = 10;
+                        } else {
+                            score[i].voters.connectThree += 10;
+                        }
+                    }
+                }
+            }
+
+            // reset the object
+            master = {
+                arrayDown: [],
+                arrayLeft: [],
+                arrayRight: [],
+                arrayDiagLeftDown: [],
+                arrayDiagLeftUp: [],
+                arrayDiagRightDown: [],
+                arrayDiagRightUp: []
+            };
         }
     }
 
@@ -835,13 +908,13 @@ const play = function() {
             if (currentRow !== -1) {
                 if (!direction) {
                     array = [gameBoard.board[i-1][currentRow], gameBoard.board[i][currentRow], gameBoard.board[i+1][currentRow]];
-                } else if (direction === 1 && currentRow <= 4) {
+                } else if (direction === 1 && currentRow <= 4 && currentRow >= 1) {
                     array = [gameBoard.board[i-1][currentRow + 1], gameBoard.board[i][currentRow], gameBoard.board[i+1][currentRow - 1]];
-                } else if (direction === 2 && currentRow <= 4) {
+                } else if (direction === 2 && currentRow <= 4 && currentRow >= 1) {
                     array = [gameBoard.board[i-1][currentRow - 1], gameBoard.board[i][currentRow], gameBoard.board[i+1][currentRow + 1]];
                 }
 
-                if (array !== "undefined") {
+                if (array) {
                     if (array[0] === turnObj.inverseTurn && array[2] === turnObj.inverseTurn) {
                         score[i].score += 50;
                         if (!score[i].voters.avoidNickTrap) {
@@ -890,12 +963,12 @@ const play = function() {
     }
 
     if (featureToggle.ai.blockThree) {
-        blockThree();
+        checkThree(true);
         validityCheck();
     }
 
     if (featureToggle.ai.connectThree) {
-        connectThree();
+        checkThree(false);
         validityCheck();
     }
 
