@@ -57,7 +57,7 @@ button {
 }
 
 .circle-cell {
-    border-radius: 50%;
+    border-radius: 45px;
     height: 95%;
     width: 95%;
     background-color: #222;
@@ -151,30 +151,118 @@ button {
     margin-bottom: 5px;
 }
 
-@media only screen and (max-width: 979px) {
+@media only screen and (max-width: 730px) {
+    .grid-item {
+        width: 90px;
+    }
     
+    .game-cell {
+        height: 90px;
+    }
 }
 
-@media only screen and (max-width: 830px) {
+@media only screen and (max-width: 665px) {
+    .grid-item {
+        width: 85px;
+    }
     
+    .game-cell {
+        height: 85px;
+    }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 630px) {
+    .grid-item {
+        width: 80px;
+    }
     
+    .game-cell {
+        height: 80px;
+    }
 }
 
-@media only screen and (max-width: 678px) {
+@media only screen and (max-width: 595px) {
+    .grid-item {
+        width: 75px;
+    }
     
-}
+    .game-cell {
+        height: 75px;
+    }
 
-@media only screen and (max-width: 608px) {
+    .heading {
+        font-size: 30pt;
+    }
+
+    #turn {
+        font-size: 22pt;
+    }
     
+    button {
+        font-size: 18pt;
+    }
 }
 
-@media only screen and (max-width: 530px) {
-
+@media only screen and (max-width: 560px) {
+    .grid-item {
+        width: 70px;
+    }
+    
+    .game-cell {
+        height: 70px;
+    }
 }
 
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 525px) {
+    .grid-item {
+        width: 65px;
+    }
+    
+    .game-cell {
+        height: 65px;
+    }
 
+    button {
+        font-size: 14pt;
+    }
+}
+
+@media only screen and (max-width: 490px) {
+    .grid-item {
+        width: 60px;
+    }
+    
+    .game-cell {
+        height: 60px;
+    }
+}
+
+@media only screen and (max-width: 455px) {
+    .grid-item {
+        width: 55px;
+    }
+    
+    .game-cell {
+        height: 55px;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .grid-item {
+        width: 50px;
+    }
+    
+    .game-cell {
+        height: 50px;
+    }
+}
+
+@media only screen and (max-width: 385px) {
+    .grid-item {
+        width: 45px;
+    }
+    
+    .game-cell {
+        height: 45px;
+    }
 }
