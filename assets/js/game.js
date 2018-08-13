@@ -86,10 +86,20 @@ const gameBoard = {
         }
         
     },
-    checkCol: function(simulate) {
+    checkCol: function(simulate, three) {
+        let jEnd = 2;
+
+        if (three) {
+            jEnd = 3;
+        }
+
         for (let i = 0; i <= 6; i++) {
-            for (let j = 0; j <= 2; j++) {
-                const array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2], gameBoard.board[i][j+3]];
+            for (let j = 0; j <= jEnd; j++) {
+                let array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2]];
+
+                if (!three) {
+                    array = [gameBoard.board[i][j], gameBoard.board[i][j+1], gameBoard.board[i][j+2], gameBoard.board[i][j+3]];
+                }
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
@@ -130,10 +140,20 @@ const gameBoard = {
             }
         }
     },
-    checkRow: function(simulate) {
-        for (let i = 0; i <= 3; i++) {
+    checkRow: function(simulate, three) {
+        let iEnd = 3;
+
+        if (three) {
+            iEnd = 4;
+        }
+
+        for (let i = 0; i <= iEnd; i++) {
             for (let j = 0; j <= 5; j++) {
-                const array = [gameBoard.board[i][j], gameBoard.board[i+1][j], gameBoard.board[i+2][j], gameBoard.board[i+3][j]];
+                let array = [gameBoard.board[i][j], gameBoard.board[i+1][j], gameBoard.board[i+2][j]];
+
+                if (!three) {
+                    array = [gameBoard.board[i][j], gameBoard.board[i+1][j], gameBoard.board[i+2][j], gameBoard.board[i+3][j]];
+                }
 
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
@@ -174,11 +194,23 @@ const gameBoard = {
             }
         }
     },
-    checkDiagA: function(simulate) {
-        for (let i = 0; i <= 3; i++) {
-            for (let j = 3; j <= 5; j++) {
-                const array = [gameBoard.board[i][j], gameBoard.board[i+1][j-1], gameBoard.board[i+2][j-2], gameBoard.board[i+3][j-3]];
+    checkDiagA: function(simulate, three) {
+        let iEnd = 3;
+        let jStart = 3;
+
+        if (three) {
+            iEnd = 4;
+            jStart = 2;
+        }
+
+        for (let i = 0; i <= iEnd; i++) {
+            for (let j = jStart; j <= 5; j++) {
+                let array = [gameBoard.board[i][j], gameBoard.board[i+1][j-1], gameBoard.board[i+2][j-2]];
                 
+                if (!three) {
+                    array = [gameBoard.board[i][j], gameBoard.board[i+1][j-1], gameBoard.board[i+2][j-2], gameBoard.board[i+3][j-3]];
+                }
+
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
                         turnObj.setWinner(2);
@@ -218,11 +250,23 @@ const gameBoard = {
             }
         }
     },
-    checkDiagB: function(simulate) {
-        for (let i = 0; i <= 3; i++) {
-            for (let j = 0; j <= 2; j++) {
-                const array = [gameBoard.board[i][j], gameBoard.board[i+1][j+1], gameBoard.board[i+2][j+2], gameBoard.board[i+3][j+3]];
+    checkDiagB: function(simulate, three) {
+        let iEnd = 3;
+        let jEnd = 2;
+
+        if (three) {
+            iEnd = 4;
+            jEnd = 3;
+        }
+
+        for (let i = 0; i <= iEnd; i++) {
+            for (let j = 0; j <= jEnd; j++) {
+                let array = [gameBoard.board[i][j], gameBoard.board[i+1][j+1], gameBoard.board[i+2][j+2]];
                 
+                if (!three) {
+                    array = [gameBoard.board[i][j], gameBoard.board[i+1][j+1], gameBoard.board[i+2][j+2], gameBoard.board[i+3][j+3]];
+                }
+
                 if (array.indexOf(0) === -1 && array.indexOf(1) === -1) {
                     if (!simulate) {
                         turnObj.setWinner(2);
@@ -262,17 +306,24 @@ const gameBoard = {
             }
         }
     },
-    check: function(simulate) {
+    check: function(simulate, three) {
         if (!simulate) {
             this.checkCol();
             this.checkRow();
             this.checkDiagA();
             this.checkDiagB();
         } else {
-            const colWin = this.checkCol(simulate);
-            const rowWin = this.checkRow(simulate);
-            const diagAWin = this.checkDiagA(simulate);
-            const diagBWin = this.checkDiagB(simulate);
+            let colWin = this.checkCol(simulate);
+            let rowWin = this.checkRow(simulate);
+            let diagAWin = this.checkDiagA(simulate);
+            let diagBWin = this.checkDiagB(simulate);
+
+            if (three) {
+                colWin = this.checkCol(simulate, three);
+                rowWin = this.checkRow(simulate, three);
+                diagAWin = this.checkDiagA(simulate, three);
+                diagBWin = this.checkDiagB(simulate, three);
+            }
 
             if (colWin === 1 || rowWin === 1 || diagAWin === 1 || diagBWin === 1) {
                 return 1;
@@ -449,7 +500,7 @@ const renderGame = function() {
             turnArea.textContent = "Player 2's turn";
             turnArea.appendChild(document.createElement("br"));
             turnArea.appendChild(undoButton);
-            
+
             if (featureToggle.debug.playButton) {
                 turnArea.appendChild(playButton);
             }
@@ -658,6 +709,30 @@ const play = function() {
         }
     }
 
+    // start blocking the moment opponent has 3 in a row
+    const blockThree = function() {
+        const currentTurn = turnObj.turn;
+        const currentInverseTurn = turnObj.inverseTurn;
+
+        for (let i = 0; i < score.length; i++) {
+            if (score[i].valid) {
+                // check to see if the move would block the opponent's win
+                gameBoard.play(i, true, true);
+                
+                if (gameBoard.check(true, true) === currentInverseTurn) {
+                    score[i].score += 15;
+                    if (!score[i].voters.blockThree) {
+                        score[i].voters.blockThree = 15;
+                    } else {
+                        score[i].voters.blockThree += 15;
+                    }
+                }
+
+                gameBoard.undo(false);
+            }
+        }
+    }
+
     // play the highest scoring move (or pick a random move amongst the highest scoring moves)
     const playBestMove = function() {
         const bestMoves = [];
@@ -689,6 +764,11 @@ const play = function() {
 
     if (featureToggle.ai.lookAhead) {
         lookAhead();
+        validityCheck();
+    }
+
+    if (featureToggle.ai.blockThree) {
+        blockThree();
         validityCheck();
     }
 
