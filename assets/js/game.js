@@ -829,11 +829,11 @@ const play = function() {
                         gameBoard.play(j, true);
 
                         if (gameBoard.check(true) === currentInverseTurn) {
-                            score[i].score -= 60;
+                            score[i].score -= 70;
                             if (!score[i].voters.opponentWouldWin) {
-                                score[i].voters.opponentWouldWin = -60;
+                                score[i].voters.opponentWouldWin = -70;
                             } else {
-                                score[i].voters.opponentWouldWin -= 60;
+                                score[i].voters.opponentWouldWin -= 70;
                             }
                         }
 
@@ -903,7 +903,18 @@ const play = function() {
                             console.log(`info: playing column ${i} would block the opponent due to ${property}:`, master[property]);
                         }
 
-                        score[i].score += 15;
+                        score[i].score += 10;
+
+                        // discourage potentially useless play at edges of board
+                        if (i === 0 || i === 6) {
+                            score[i].score -= 10;
+
+                            if (!score[i].voters.blockThree) {
+                                score[i].voters.blockThree = -10;
+                            } else {
+                                score[i].voters.blockThree -= 10;
+                            }
+                        }
 
                         if (property !== "arrayDown") {
                             score[i].score += 5;
@@ -916,9 +927,9 @@ const play = function() {
                         }
 
                         if (!score[i].voters.blockThree) {
-                            score[i].voters.blockThree = 15;
+                            score[i].voters.blockThree = 10;
                         } else {
-                            score[i].voters.blockThree += 15;
+                            score[i].voters.blockThree += 10;
                         }
                     }
                 } else {
@@ -927,7 +938,18 @@ const play = function() {
                             console.log(`info: playing column ${i} would create a line of 3 due to ${property}:`, master[property]);
                         }
 
-                        score[i].score += 10;
+                        score[i].score += 15;
+
+                        // discourage potentially useless play at edges of board
+                        if (i === 0 || i === 6) {
+                            score[i].score -= 10;
+
+                            if (!score[i].voters.blockThree) {
+                                score[i].voters.blockThree = -10;
+                            } else {
+                                score[i].voters.blockThree -= 10;
+                            }
+                        }
 
                         if (property !== "arrayDown") {
                             score[i].score += 5;
@@ -940,9 +962,9 @@ const play = function() {
                         }
 
                         if (!score[i].voters.connectThree) {
-                            score[i].voters.connectThree = 10;
+                            score[i].voters.connectThree = 15;
                         } else {
-                            score[i].voters.connectThree += 10;
+                            score[i].voters.connectThree += 15;
                         }
                     }
                 }
