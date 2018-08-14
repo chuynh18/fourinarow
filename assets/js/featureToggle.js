@@ -6,7 +6,7 @@ const featureToggle = {
         "blockThree": true,
         "connectThree": true,
         "avoidNickTrap": true,
-        "increaseCenterWeight": true,
+        "increaseCenterWeight": false,
         "speed": 650
     },
     "logging": {
