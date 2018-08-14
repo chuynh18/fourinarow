@@ -380,6 +380,8 @@ const reset = function() {
     turnObj.reset();
     unhighlightAllColumns();
     renderGame();
+    document.getElementById("game-container").style.top = "0px";
+    document.getElementById("game-container").style.left = "0px";
 }
 
 const playSound = function(sound) {
