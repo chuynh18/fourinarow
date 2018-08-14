@@ -382,6 +382,11 @@ const reset = function() {
     renderGame();
 }
 
+const playSound = function(sound) {
+    const audio = new Audio(sound);
+    audio.play();
+}
+
 // renders the page according to game state (player turn, tied game, player won, etc.)
 const renderGame = function() {
     var html = document.getElementsByTagName("html")[0];
@@ -458,6 +463,12 @@ const renderGame = function() {
         html.style.backgroundColor = "#778899";
         board.style.backgroundColor = "#2196F3";
 
+        if (turnObj.moveList.length > 0) {
+            setTimeout(function() {
+                playSound("assets/snd/drop.webm");
+            }, 400);
+        }
+
         if (!turnObj.winner) {
             turnArea.textContent = "Player 1's turn";
             turnArea.appendChild(document.createElement("br"));
@@ -484,6 +495,10 @@ const renderGame = function() {
     } else if (turnObj.turn === 2) {
         html.style.backgroundColor = "#aa8484";
         board.style.backgroundColor = "#742525";
+
+        setTimeout(function() {
+            playSound("assets/snd/drop.webm");
+        }, 400);
 
         if (!turnObj.winner) {
             turnArea.textContent = "Player 2's turn";
