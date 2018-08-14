@@ -149,6 +149,72 @@ button {
     background-color: #ccc66c
 }
 
+.lastPlay0 {
+    animation-name: drop0;
+    animation-duration: 400ms;
+    position: relative;
+}
+
+.lastPlay1 {
+    animation-name: drop1;
+    animation-duration: 400ms;
+    position: relative;
+}
+
+.lastPlay2 {
+    animation-name: drop2;
+    animation-duration: 400ms;
+    position: relative;
+}
+
+.lastPlay3 {
+    animation-name: drop3;
+    animation-duration: 400ms;
+    position: relative;
+}
+
+.lastPlay4 {
+    animation-name: drop4;
+    animation-duration: 400ms;
+    position: relative;
+}
+
+.lastPlay5 {
+    animation-name: drop5;
+    animation-duration: 400ms;
+    position: relative;
+}
+
+@keyframes drop0 {
+    0% {bottom:500px}
+    100% {bottom:0px}
+}
+
+@keyframes drop1 {
+    0% {bottom:400px}
+    100% {bottom:0px}
+}
+
+@keyframes drop2 {
+    0% {bottom:300px}
+    100% {bottom:0px}
+}
+
+@keyframes drop3 {
+    0% {bottom:200px}
+    100% {bottom:0px}
+}
+
+@keyframes drop4 {
+    0% {bottom:100px}
+    100% {bottom:0px}
+}
+
+@keyframes drop5 {
+    0% {bottom:50px}
+    100% {bottom:0px}
+}
+
 @media only screen and (max-width: 730px) {
     .grid-item {
         width: 90px;
@@ -176,6 +242,36 @@ button {
     
     .game-cell {
         height: 80px;
+    }
+
+    @keyframes drop0 {
+        0% {bottom:400px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop1 {
+        0% {bottom:320px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop2 {
+        0% {bottom:240px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop3 {
+        0% {bottom:160px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop4 {
+        0% {bottom:80px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop5 {
+        0% {bottom:40px}
+        100% {bottom:0px}
     }
 }
 
@@ -239,6 +335,36 @@ button {
     button {
         font-size: 14pt;
     }
+
+    @keyframes drop0 {
+        0% {bottom:325px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop1 {
+        0% {bottom:260px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop2 {
+        0% {bottom:195px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop3 {
+        0% {bottom:130px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop4 {
+        0% {bottom:65px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop5 {
+        0% {bottom:32px}
+        100% {bottom:0px}
+    }
 }
 
 @media only screen and (max-width: 490px) {
@@ -268,6 +394,36 @@ button {
     
     .game-cell {
         height: 50px;
+    }
+
+    @keyframes drop0 {
+        0% {bottom:250px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop1 {
+        0% {bottom:200px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop2 {
+        0% {bottom:150px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop3 {
+        0% {bottom:100px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop4 {
+        0% {bottom:50px}
+        100% {bottom:0px}
+    }
+    
+    @keyframes drop5 {
+        0% {bottom:25px}
+        100% {bottom:0px}
     }
 }
 

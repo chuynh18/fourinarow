@@ -395,6 +395,9 @@ const renderGame = function() {
     playButton.textContent = "play()";
     playButton.setAttribute("onclick", "play()");
 
+    var row;
+    var column;
+
     if (turnObj.mode === 1) {
         undoButton.setAttribute("onclick", "gameBoard.undo(true);");
     } else {
@@ -414,7 +417,34 @@ const renderGame = function() {
                     document.getElementById(`${i}-${j}`).classList.remove("p1Win");
                     document.getElementById(`${i}-${j}`).classList.remove("p2Win");
                 }
+                // remove "lastPlay" class from all tokens
+                document.getElementById(`${i}-${j}`).classList.remove("lastPlay0", "lastPlay1", "lastPlay2", "lastPlay3", "lastPlay4", "lastPlay5");
             }
+        }
+    }
+
+    // add "lastPlay" class to the last played token
+    if (turnObj.moveList.length > 0) {
+        column = turnObj.moveList[turnObj.moveList.length-1];
+
+        if (gameBoard.board[turnObj.moveList[turnObj.moveList.length-1]].indexOf(0) === -1) {
+            row = 5;
+        } else {
+            row = gameBoard.board[turnObj.moveList[turnObj.moveList.length-1]].indexOf(0) - 1;
+        }
+
+        if (row === 0) {
+            document.getElementById(`${column}-${row}`).classList.add("lastPlay0");
+        } else if (row === 1) {
+            document.getElementById(`${column}-${row}`).classList.add("lastPlay1");
+        } else if (row === 2) {
+            document.getElementById(`${column}-${row}`).classList.add("lastPlay2");
+        } else if (row === 3) {
+            document.getElementById(`${column}-${row}`).classList.add("lastPlay3");
+        } else if (row === 4) {
+            document.getElementById(`${column}-${row}`).classList.add("lastPlay4");
+        } else if (row === 5) {
+            document.getElementById(`${column}-${row}`).classList.add("lastPlay5");
         }
     }
 
