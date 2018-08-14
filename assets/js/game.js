@@ -691,7 +691,7 @@ const syncDevPanel = function(save) {
     logWinDebugInfo.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logWinDebugInfo');">${featureToggle.logging.logWinDebugInfo}</button>`;
     logThrees.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logThrees');">${featureToggle.logging.logThrees}</button>`;
     logClicks.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logClicks');">${featureToggle.logging.logClicks}</button>`;
-    showPlayButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'playButton');">${featureToggle.debug.playButton}</button>`;
+    showPlayButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'playButton');renderGame();">${featureToggle.debug.playButton}</button>`;
     mlgButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'mlg');">${featureToggle.debug.mlg}</button>`;
 
     if (save) {
