@@ -380,8 +380,11 @@ const reset = function() {
     turnObj.reset();
     unhighlightAllColumns();
     renderGame();
-    document.getElementById("game-container").style.top = "0px";
-    document.getElementById("game-container").style.left = "0px";
+
+    setTimeout(function() {
+        document.getElementById("game-container").style.top = "initial";
+        document.getElementById("game-container").style.left = "initial";
+    }, 60);
 }
 
 const playSound = function(sound) {
@@ -553,7 +556,7 @@ const renderGame = function() {
         const resetButton = document.createElement("button");
 
         resetButton.textContent = "New game";
-        resetButton.setAttribute("onclick", "reset()");
+        resetButton.setAttribute("onclick", "reset();");
 
         turnArea.appendChild(document.createElement("br"));
         turnArea.appendChild(resetButton);
