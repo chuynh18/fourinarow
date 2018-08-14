@@ -668,6 +668,7 @@ const unhighlightAllColumns = function() {
 
 // populate dev panel
 const syncDevPanel = function(save) {
+    const increaseCenterWeight = document.getElementById("toggleIncreaseCenterWeight");
     const lookAhead = document.getElementById("toggleLookAhead");
     const blockThree = document.getElementById("toggleBlockThree");
     const connectThree = document.getElementById("toggleConnectThree");
@@ -681,6 +682,7 @@ const syncDevPanel = function(save) {
     const showPlayButton = document.getElementById("toggleShowPlayButton");
     const mlgButton = document.getElementById("togglemlg");
 
+    increaseCenterWeight.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'increaseCenterWeight');">${featureToggle.ai.increaseCenterWeight}</button>`;
     lookAhead.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'lookAhead');">${featureToggle.ai.lookAhead}</button>`;
     blockThree.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'blockThree');">${featureToggle.ai.blockThree}</button>`;
     connectThree.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'connectThree');">${featureToggle.ai.connectThree}</button>`;
@@ -1014,7 +1016,9 @@ const play = function() {
 
     // ==== AI function calls here ====
 
-    increaseCenterWeight(7);
+    if (featureToggle.ai.increaseCenterWeight) {
+        increaseCenterWeight(7);
+    }
 
     validityCheck();
 
