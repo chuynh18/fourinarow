@@ -466,7 +466,7 @@ const renderGame = function() {
         if (turnObj.moveList.length > 0) {
             setTimeout(function() {
                 playSound("assets/snd/drop.webm");
-            }, 400);
+            }, 250);
         }
 
         if (!turnObj.winner) {
@@ -498,7 +498,7 @@ const renderGame = function() {
 
         setTimeout(function() {
             playSound("assets/snd/drop.webm");
-        }, 400);
+        }, 250);
 
         if (!turnObj.winner) {
             turnArea.textContent = "Player 2's turn";

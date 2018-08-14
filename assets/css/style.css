@@ -151,37 +151,37 @@ button {
 
 .lastPlay0 {
     animation-name: drop0;
-    animation-duration: 400ms;
+    animation-duration: 250ms;
     position: relative;
 }
 
 .lastPlay1 {
     animation-name: drop1;
-    animation-duration: 400ms;
+    animation-duration: 250ms;
     position: relative;
 }
 
 .lastPlay2 {
     animation-name: drop2;
-    animation-duration: 400ms;
+    animation-duration: 250ms;
     position: relative;
 }
 
 .lastPlay3 {
     animation-name: drop3;
-    animation-duration: 400ms;
+    animation-duration: 250ms;
     position: relative;
 }
 
 .lastPlay4 {
     animation-name: drop4;
-    animation-duration: 400ms;
+    animation-duration: 250ms;
     position: relative;
 }
 
 .lastPlay5 {
     animation-name: drop5;
-    animation-duration: 400ms;
+    animation-duration: 250ms;
     position: relative;
 }
 
