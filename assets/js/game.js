@@ -664,9 +664,9 @@ const play = function() {
     let score = [
         {"score": 0, "valid": false, "voters": {}},
         {"score": 0, "valid": false, "voters": {}},
-        {"score": 1, "valid": false, "voters": {}},
-        {"score": 1, "valid": false, "voters": {}},
-        {"score": 1, "valid": false, "voters": {}},
+        {"score": 0, "valid": false, "voters": {}},
+        {"score": 0, "valid": false, "voters": {}},
+        {"score": 0, "valid": false, "voters": {}},
         {"score": 0, "valid": false, "voters": {}},
         {"score": 0, "valid": false, "voters": {}}
     ];
@@ -683,6 +683,19 @@ const play = function() {
     }
 
     // ==== AI voter definitions here ====
+
+    const increaseCenterWeight = function(untilTurn) {
+        if (turnObj.turns < untilTurn) {
+            for (let i = 2; i <= 4; i++) {
+                score[i].score += 1;
+                if (!score[i].voters.increaseCenterWeight) {
+                    score[i].voters.increaseCenterWeight = 1;
+                } else {
+                    score[i].voters.increaseCenterWeight += 1;
+                }
+            }
+        }
+    }
 
     // looks ahead 2 turns
     const lookAhead = function() {
@@ -767,13 +780,13 @@ const play = function() {
             // console.log(`for column ${i}, currentRow is ${currentRow}`);
 
             if (currentRow !== -1) {
-                if (currentRow >= 2) {
+                if (currentRow >= 2 && currentRow !== 5) {
                     master.arrayDown = [gameBoard.board[i][currentRow-1], gameBoard.board[i][currentRow-2]];
                 }
                 
                 if (i >= 2) {
                     master.arrayLeft = [gameBoard.board[i-1][currentRow], gameBoard.board[i-2][currentRow]];
-                    if (currentRow >= 2) {
+                    if (currentRow >= 2 && currentRow !== 5) {
                         master.arrayDiagLeftDown = [gameBoard.board[i-1][currentRow-1], gameBoard.board[i-2][currentRow-2]];
                     }
                     if (currentRow <= 3) {
@@ -783,7 +796,7 @@ const play = function() {
 
                 if (i <= 4) {
                     master.arrayRight = [gameBoard.board[i+1][currentRow], gameBoard.board[i+2][currentRow]];
-                    if (currentRow >= 2) {
+                    if (currentRow >= 2 && currentRow !== 5) {
                         master.arrayDiagRightDown = [gameBoard.board[i+1][currentRow-1], gameBoard.board[i+2][currentRow-2]];
                     }
                     if (currentRow <= 3) {
@@ -911,6 +924,8 @@ const play = function() {
     }
 
     // ==== AI function calls here ====
+
+    increaseCenterWeight(7);
 
     validityCheck();
 
