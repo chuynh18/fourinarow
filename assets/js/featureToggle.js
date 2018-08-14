@@ -16,6 +16,7 @@ const featureToggle = {
         "logThrees": true
     },
     "debug": {
-        "playButton": false
+        "playButton": false,
+        "mlg": false
     }
 };

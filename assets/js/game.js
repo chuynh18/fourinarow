@@ -527,10 +527,20 @@ const renderGame = function() {
         turnArea.textContent = "Player 1 wins";
         html.style.backgroundColor = "#778899";
         board.style.backgroundColor = "#2196F3";
+
+        if (featureToggle.debug.mlg && turnObj.mode === 3) {
+            mlg();
+            playSound("assets/snd/mlg.webm");
+        }
     } else if (turnObj.winner === 2) {
         turnArea.textContent = "Player 2 wins";
         html.style.backgroundColor = "#aa8484";
         board.style.backgroundColor = "#742525";
+
+        if (featureToggle.debug.mlg && turnObj.mode === 2) {
+            mlg();
+            playSound("assets/snd/mlg.webm");
+        }
     } else if (turnObj.winner === -1) {
         turnArea.textContent = "Tied game";
         html.style.backgroundColor = "#a9f5a9";
@@ -664,6 +674,7 @@ const syncDevPanel = function(save) {
     const logThrees = document.getElementById("toggleLogThrees");
     const logClicks = document.getElementById("toggleLogClicks");
     const showPlayButton = document.getElementById("toggleShowPlayButton");
+    const mlgButton = document.getElementById("togglemlg");
 
     lookAhead.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'lookAhead');">${featureToggle.ai.lookAhead}</button>`;
     blockThree.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.ai, 'blockThree');">${featureToggle.ai.blockThree}</button>`;
@@ -676,7 +687,8 @@ const syncDevPanel = function(save) {
     logThrees.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logThrees');">${featureToggle.logging.logThrees}</button>`;
     logClicks.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.logging, 'logClicks');">${featureToggle.logging.logClicks}</button>`;
     showPlayButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'playButton');">${featureToggle.debug.playButton}</button>`;
-    
+    mlgButton.innerHTML = `<button class="featureToggler" onclick="flipFeatureToggle(featureToggle.debug, 'mlg');">${featureToggle.debug.mlg}</button>`;
+
     if (save) {
         console.log("Changes saved:");
     } else {
@@ -701,6 +713,33 @@ const setSpeed = function(path, key) {
     const newSpeed = document.getElementById("inputSpeed").value;
     path[key] = Number(newSpeed);
     syncDevPanel(true);
+}
+
+const mlg = function() {
+    const array = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"];
+    let random = "#";
+    let top = Math.floor(Math.random() * 34);
+    let left = Math.floor(Math.random() * 34);
+
+    for (let i = 0; i < 6; i++) {
+        random += array[Math.floor(Math.random() * array.length)];
+    }
+
+    document.getElementsByTagName("html")[0].style.backgroundColor = random;
+
+    if (Math.floor(Math.random() * 2) === 1) {
+        top = -top;
+    }
+    if (Math.floor(Math.random() * 2) === 1) {
+        left = -left;
+    }
+
+    document.getElementById("game-container").style.top = `${top}px`;
+    document.getElementById("game-container").style.left = `${left}px`;
+
+    if (((turnObj.winner === 1 && turnObj.mode === 3) || (turnObj.winner === 2 && turnObj.mode === 2)) && featureToggle.debug.mlg) {
+        setTimeout(mlg, 50);
+    }
 }
 
 // ========== AI: Artificial Intelligence directed by Steven Spielberg ==========

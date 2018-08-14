@@ -33,6 +33,10 @@ button {
     margin: 0 5px;
 }
 
+#game-container {
+    position: relative;
+}
+
 .grid-container {
     margin: auto;
     display: inline-grid;
